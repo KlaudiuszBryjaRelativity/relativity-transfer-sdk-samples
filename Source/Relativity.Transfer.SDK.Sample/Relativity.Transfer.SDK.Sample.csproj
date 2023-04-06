@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+		<TargetFrameworks>net462;net48;netcoreapp3.1;net6.0</TargetFrameworks>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<None Remove="C:\dev\relativity-transfer-sdk\LICENSE.txt" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="ByteSize" Version="2.0.0" />
+		<PackageReference Include="Newtonsoft.Json" Version="10.0.2" />
+		<PackageReference Include="Relativity.Transfer.SDK" Version="1.7.0-pre.1" />
+		<PackageReference Include="System.Configuration.ConfigurationManager" Version="6.0.0" />
+	</ItemGroup>
+
+</Project>
