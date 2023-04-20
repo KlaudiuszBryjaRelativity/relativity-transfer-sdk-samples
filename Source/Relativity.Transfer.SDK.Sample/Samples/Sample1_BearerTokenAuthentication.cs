@@ -76,7 +76,7 @@
 				else
 				{
 					Console.WriteLine("Authentication provider - Requesting credentials.. ");
-					// The token is cached by TransferSDK, but be aware that a token may expire during long transfers. That's why yours implementation should not cache the token and always provide a valid one. 
+					// The token is cached by TransferSDK, but be aware it may expire during long transfers. That's why your implementation should not cache the token and always provide a new one.
 					_bearerToken = await GetBearerTokenAsync(_clientSecret);
 					return new RelativityCredentials(_bearerToken, BaseAddress);
 				}

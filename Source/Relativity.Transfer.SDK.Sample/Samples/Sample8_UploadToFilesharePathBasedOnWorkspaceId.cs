@@ -32,11 +32,9 @@
 			string clientLogin = _consoleHelper.GetOrEnterSetting(SettingNames.ClientLogin);
 			string clientPassword = _consoleHelper.GetOrEnterSetting(SettingNames.ClientPassword);
 
-			// provide workspace id 
 			string workspaceIdStr = _consoleHelper.EnterUntilValid("Enter workspaceId to list its fileshares.", "[-]*[0-9]+");
 			int workspaceId = int.Parse(workspaceIdStr);
 
-			// Get list of fileshares associated with the provided workspace.The association is based on Resource Pool assigned to the workspace.
 			WorkspaceFilesharesRetriever filesharesRetriever = new WorkspaceFilesharesRetriever(relativityInstanceAddress);
 			IEnumerable<FileshareInfo> fileshares = await filesharesRetriever.GetWorkspaceFilesharesAsync(workspaceId, clientLogin, clientPassword).ConfigureAwait(false);
 
@@ -46,12 +44,12 @@
 				return;
 			}
 
-			FileshareInfo choosenFileshare = ChooseFileshare(fileshares);
+			FileshareInfo chosenFileshare = ChooseFileshare(fileshares);
 
 			DirectoryPath sourcePath = _consoleHelper.EnterSourceDirectoryPathOrTakeDefault();
 
 			Guid transferJobId = Guid.NewGuid();
-			DirectoryPath destinationPath = GetDestinationPath(choosenFileshare.UncPath, transferJobId.ToString());
+			DirectoryPath destinationPath = GetDestinationPath(chosenFileshare.UncPath, transferJobId.ToString());
 
 			RelativityAuthenticationProvider authenticationProvider = new RelativityAuthenticationProvider(relativityInstanceAddress, new OAuthCredentials(clientId, clientSecret));
 
