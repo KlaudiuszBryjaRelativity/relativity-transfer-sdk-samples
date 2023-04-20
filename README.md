@@ -18,14 +18,14 @@ Library supports `.NETStandard 2.0`, which means it is cross-platform. You can r
 
 ---
 ## Authentication
- - First we have to [create Transfer Client](https://link_to_implementation.com)] object via provided builder, which is used to manage our transfers.
+ - First we have to [create](https://github.com/relativitydev/relativity-transfer-sdk-samples/blob/REL-826296-TransferSDK-samples-initial-commit/Source/Relativity.Transfer.SDK.Sample/Samples/Sample1_BearerTokenAuthentication.cs#L36-L39) transfer client object, which is used to manage our transfers.
  - TransferSKD uses a bearer token in order to authenticate the transfer.
- - The token is passed to the Transfer Client via [implementation](https://link_to_implementation.com) of `IRelativityAuthenticationProvider` interface. 
- - In order to get the token, we use [Bearer token authentication](https://platform.relativity.com/RelativityOne/Content/REST_API/REST_API_authentication.htm#_Bearer_token_authentication), which requires us to provide user OAuth2 client id and client secret. (see [Sample1](https://sample1_link_placeholder.com), [BearerTokenRetriever](https://retriever_class_link_placeholder.com))
+ - To pass the token, we must [register](https://github.com/relativitydev/relativity-transfer-sdk-samples/blob/REL-826296-TransferSDK-samples-initial-commit/Source/Relativity.Transfer.SDK.Sample/Samples/Sample1_BearerTokenAuthentication.cs#L37) an [authentication object](https://github.com/relativitydev/relativity-transfer-sdk-samples/blob/REL-826296-TransferSDK-samples-initial-commit/Source/Relativity.Transfer.SDK.Sample/Samples/Sample1_BearerTokenAuthentication.cs#L54) which implements `IRelativityAuthenticationProvider` interface. 
+ - In order to get the token, we use [Bearer token authentication](https://platform.relativity.com/RelativityOne/Content/REST_API/REST_API_authentication.htm#_Bearer_token_authentication), which requires us to provide user OAuth2 client id and client secret. (see [Sample1](https://github.com/relativitydev/relativity-transfer-sdk-samples/blob/REL-826296-TransferSDK-samples-initial-commit/Source/Relativity.Transfer.SDK.Sample/Samples/Sample1_BearerTokenAuthentication.cs#L60), [BearerTokenRetriever](https://github.com/relativitydev/relativity-transfer-sdk-samples/blob/REL-826296-TransferSDK-samples-initial-commit/Source/Relativity.Transfer.SDK.Sample/Authentication/BearerTokenRetriever.cs))
     -  Remember that token can become obsolete after some time, so you have to guarantee that `AuthenticationProvider` always returns a valid token.
  - We can read the id and secret from Relativity instance. Go to `Oauth2 Client` tab, find our user in `Context User` column, and after cliking it you can read the Id value and secret. 
      - Keep in mind that secret is valid only limited period of time (8 hours by default), so before copy it is good to regenerate it first.
- - We can also use a [REST service](https://platform.relativity.com/10.3/Content/Authentication/OAuth2_clients.htm#_OAuth2_Client_Manager_REST_service) to automatically refresh the client secret. In order to do that we use [Basic authentication](https://platform.relativity.com/RelativityOne/Content/REST_API/REST_API_authentication.htm#_Basic_authentication) (see [Sample2](https://sample2_link_placeholder.com), [OauthClientManager](https://link_placeholder.com)) 
+ - We can also use a [REST service](https://platform.relativity.com/10.3/Content/Authentication/OAuth2_clients.htm#_OAuth2_Client_Manager_REST_service) to automatically refresh the client secret. In order to do that we use [Basic authentication](https://platform.relativity.com/RelativityOne/Content/REST_API/REST_API_authentication.htm#_Basic_authentication) (see [Sample2](https://github.com/relativitydev/relativity-transfer-sdk-samples/blob/REL-826296-TransferSDK-samples-initial-commit/Source/Relativity.Transfer.SDK.Sample/Samples/Sample2_BasicCredentialsAndBearerAuthentication.cs), [OauthClientManager](https://github.com/relativitydev/relativity-transfer-sdk-samples/blob/REL-826296-TransferSDK-samples-initial-commit/Source/Relativity.Transfer.SDK.Sample/Authentication/OAuthClientManager.cs)) 
     - Warning - this type of authentication will become deprecated in Relativity at the end of 2023. 
  - We strongly recommend to implement your own authentication mechanism which best suits your needs. Here are some helpful links: 
     - [Relativity REST API authentication](https://platform.relativity.com/RelativityOne/Content/REST_API/REST_API_authentication.htm)
@@ -46,7 +46,7 @@ Library supports `.NETStandard 2.0`, which means it is cross-platform. You can r
     - `RelativityFileshareRootPath` - The root of the Realtivity fileshare. Example: `\\files.contoso.pod.r1.kcura.com\contoso`
         - Note: This value can be taken from Relativity. Find `Servers` tab, filter it by `Fileshare`, search for the fileshare you wish to execute a transfer, and copy its `UNC` path value **without** the `\Files\` suffix.
     - `FileshareRelativeDestinationPath` - The location where the files are transferred to, relative to the root of the fileshare. This is already set to `Temp\TransferSDK-Sample`, so you won't be asked for it.
-        - **Important!**: the upload elements will be put in the `Temp\TransferSDK-Sample\[transferid]` folder, where `transferid` is an unique transfer identifier
+        - **Note**: the upload elements will be put in the `Temp\TransferSDK-Sample\[transferJobId]` folder, where `transferJobId` is an unique transfer identifier
         - Ensure that provided path doesn't have additional `\` and is valid (exists)
         - The path must be rooted in one of the core folders that reside on the fileshare (like Files, Temp, ARM, etc.)
         - You can modify this value and observe the transfer result (in RelativityOne Staging Explorer for example).
@@ -81,14 +81,52 @@ Library supports `.NETStandard 2.0`, which means it is cross-platform. You can r
 
 | Sample name | .Net |
 | ------ | ------ |
-| Sample1_BearerTokenAuthentication | [Sample1_BearerTokenAuthentication](link) |
-| Sample2_BasicCredentialsAndBearerAuthentication | [Sample2_BasicCredentialsAndBearerAuthentication](link) |
-| Sample3_SettingUpProgressHandler | [Sample3_SettingUpProgressHandler](link) |
-| Sample4_UploadSingleFile | [Sample4_UploadSingleFile](link) |
-| Sample5_UploadDirectory | [Sample5_UploadDirectory](link) |
-| Sample6_UploadDirectoryWithCustomizedRetryPolicy | [Sample6_UploadDirectoryWithCustomizedRetryPolicy](link) |
-| Sample7_UploadDirectoryWithExclusionPolicy | [Sample7_UploadDirectoryWithExclusionPolicy](link) |
-
+| Sample1_BearerTokenAuthentication | [Sample1_BearerTokenAuthentication](https://github.com/relativitydev/relativity-transfer-sdk-samples/blob/REL-826296-TransferSDK-samples-initial-commit/Source/Relativity.Transfer.SDK.Sample/Samples/Sample1_BearerTokenAuthentication.cs) |
+| Sample2_BasicCredentialsAndBearerAuthentication | [Sample2_BasicCredentialsAndBearerAuthentication](https://github.com/relativitydev/relativity-transfer-sdk-samples/blob/REL-826296-TransferSDK-samples-initial-commit/Source/Relativity.Transfer.SDK.Sample/Samples/Sample2_BasicCredentialsAndBearerAuthentication.cs) |
+| Sample3_SettingUpProgressHandlerAndPrintingSummary | [Sample3_SettingUpProgressHandlerAndPrintingSummary](https://github.com/relativitydev/relativity-transfer-sdk-samples/blob/REL-826296-TransferSDK-samples-initial-commit/Source/Relativity.Transfer.SDK.Sample/Samples/Sample3_SettingUpProgressHandlerAndPrintingSummary.cs) |
+| Sample4_UploadSingleFile | [Sample4_UploadSingleFile](https://github.com/relativitydev/relativity-transfer-sdk-samples/blob/REL-826296-TransferSDK-samples-initial-commit/Source/Relativity.Transfer.SDK.Sample/Samples/Sample4_UploadSingleFile.cs) |
+| Sample5_UploadDirectory | [Sample5_UploadDirectory](https://github.com/relativitydev/relativity-transfer-sdk-samples/blob/REL-826296-TransferSDK-samples-initial-commit/Source/Relativity.Transfer.SDK.Sample/Samples/Sample5_UploadDirectory.cs) |
+| Sample6_UploadDirectoryWithCustomizedRetryPolicy | [Sample6_UploadDirectoryWithCustomizedRetryPolicy](https://github.com/relativitydev/relativity-transfer-sdk-samples/blob/REL-826296-TransferSDK-samples-initial-commit/Source/Relativity.Transfer.SDK.Sample/Samples/Sample6_UploadDirectoryWithCustomizedRetryPolicy.cs) |
+| Sample7_UploadDirectoryWithExclusionPolicy | [Sample7_UploadDirectoryWithExclusionPolicy](https://github.com/relativitydev/relativity-transfer-sdk-samples/blob/REL-826296-TransferSDK-samples-initial-commit/Source/Relativity.Transfer.SDK.Sample/Samples/Sample7_UploadDirectoryWithExclusionPolicy.cs) |
+| Sample8_UploadToFilesharePathBasedOnWorkspaceId | [Sample8_UploadToFilesharePathBasedOnWorkspaceId](https://github.com/relativitydev/relativity-transfer-sdk-samples/blob/REL-826296-TransferSDK-samples-initial-commit/Source/Relativity.Transfer.SDK.Sample/Samples/Sample8_UploadToFilesharePathBasedOnWorkspaceId.cs)
 ---
-# Errors 
+# Exceptions 
+Some exceptions you can encounter when using samples and potential root causes
 
+  #### System.Net.WebException: The remote name could not be resolved:
+  - sample console output: 
+    ```
+    Exception occurred during execution of the transfer. Look at the inner exception for more details.
+    Relativity.Transfer.SDK.Interfaces.Exceptions.TransferJobExecutionException: Exception occurred during execution of the transfer. Look at the inner exception for more details. ---> Relativity.Transfer.SDK.Interfaces.Exceptions.UnauthorizedException: Unable to retrieve the authentication token. Check inner exception for details. ---> System.ApplicationException: Failed to retrieve credentials. ---> System.ApplicationException: Failed to retrieve bearer token. ---> System.Net.Http.HttpRequestException: An error occurred while sending the request. ---> System.Net.WebException: The remote name could not be resolved: 'reg-b.r1.kcurdda.com'
+    ```
+  - Reasons: 
+     - Wrong RelativityOneInstanceUrl value. 
+     - Relativity instance is not available 
+
+  #### Relativity.Transfer.SDK.Interfaces.Exceptions.UnauthorizedException:
+  - sample console output: 
+    ```
+    Exception occurred during execution of the transfer. Look at the inner exception for more details.
+    Relativity.Transfer.SDK.Interfaces.Exceptions.TransferJobExecutionException: Exception occurred during execution of the transfer. Look at the inner exception for more details. ---> Relativity.Transfer.SDK.Interfaces.Exceptions.UnauthorizedException: Unable to retrieve the authentication token. Check inner exception for details. ---> System.InvalidOperationException: API call 'ReadAsync' failed with status code: 'Unauthorized' Details: ''.
+    ```
+  - Reasons: 
+     - wrong password / credentials / client ID
+
+  #### Relativity.Transfer.SDK.Interfaces.Exceptions.BackendServiceException: Forbidden
+  - sample console output: 
+    ```
+    Exception occurred during execution of the transfer. Look at the inner exception for more details.
+    Relativity.Transfer.SDK.Interfaces.Exceptions.TransferJobExecutionException: Exception occurred during execution of the transfer. Look at the inner exception for more details. ---> Relativity.Transfer.SDK.Interfaces.Exceptions.BackendServiceException: Forbidden
+    ```
+  - Reasons: 
+     - Wrong FileshareRelativeDestinationPath setting. Ensure there is no `\` at the beginning of the path.
+     - Wrong RelativityOneFileshareRoot. Ensure there is no `files` suffix on the path, and the path is correct.
+
+  #### Relativity.Transfer.SDK.Interfaces.Exceptions.BackendServiceException: Unsupported Media Type:
+  - sample console output: 
+    ```
+    Exception occurred during execution of the transfer. Look at the inner exception for more details.
+    Relativity.Transfer.SDK.Interfaces.Exceptions.TransferJobExecutionException: Exception occurred during execution of the transfer. Look at the inner exception for more details. ---> Relativity.Transfer.SDK.Interfaces.Exceptions.BackendServiceException: Unsupported Media Type
+    ```
+  - Reasons: 
+     - Wrong RelativityOneInstanceUrl. Ensure value is correct, and it ends with `*com` and there is **NO** `/Relativity/` suffix. 
