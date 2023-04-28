@@ -11,7 +11,7 @@
 			ConfigHelper configHelper = new ConfigHelper();
 			ConsoleHelper consoleHelper = new ConsoleHelper(configHelper);
 
-			if( !await consoleHelper.InitStartupSettingsAsync())
+			if( !consoleHelper.InitStartupSettings())
 			{
 				return;
 			}

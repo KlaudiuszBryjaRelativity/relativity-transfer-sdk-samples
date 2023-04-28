@@ -51,7 +51,7 @@
 			_samples.Add(key, sample);
 		}
 
-		public async Task<bool> InitStartupSettingsAsync()
+		public bool InitStartupSettings()
 		{
 			Console.ResetColor();
 			Console.Clear();
