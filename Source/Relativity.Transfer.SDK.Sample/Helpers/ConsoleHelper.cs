@@ -51,7 +51,7 @@
 			_samples.Add(key, sample);
 		}
 
-		public async Task<bool> InitStartupSettingsAsync()
+		public bool InitStartupSettings()
 		{
 			Console.ResetColor();
 			Console.Clear();
@@ -83,33 +83,13 @@
 			var defaultSourceFilePath = GetOrEnterSetting(SettingNames.DefaultSourceFilePath);
 			var defaultSourceDirectoryPath = GetOrEnterSetting(SettingNames.DefaultSourceDirectoryPath);
 			var clientOauthId = GetOrEnterSetting(SettingNames.ClientOAuth2Id);
-			var clientLogin = GetOrEnterSetting(SettingNames.ClientLogin);
-			var clientPassword = GetOrEnterSetting(SettingNames.ClientPassword);
-			string clientSecret;
-
-			try
-			{
-				Console.Write("  Refreshing client secret...");
-				var base64BasicCredentials = Convert.ToBase64String(Encoding.UTF8.GetBytes(clientLogin + ":" + clientPassword));
-				var oauthClientManager = new OAuthClientManager(relativityInstanceUrl, clientOauthId, base64BasicCredentials);
-				clientSecret = await oauthClientManager.RetrieveClientSecretAsync();
-				Console.WriteLine($" Success!");
-				Console.WriteLine($"  {"Client Secret",-40}: {clientSecret}");
-			}
-			catch (Exception ex)
-			{
-				Console.ForegroundColor = ConsoleColor.Red;
-				Console.WriteLine($"  Error while refreshing use secret: {ex.Message}");
-				Console.WriteLine("  Ensure provided settings are correct.");
-				return false;
-			}
+			var clientSecret = GetOrEnterSetting(SettingNames.ClientSecret);
 
 			_configHelper.SetSetting(SettingNames.ClientName, clientName);
 			_configHelper.SetSetting(SettingNames.RelativityOneInstanceUrl, relativityInstanceUrl);
 			_configHelper.SetSetting(SettingNames.RelativityOneFileshareRoot, relativityFileshareRoot);
 			_configHelper.SetSetting(SettingNames.DefaultSourceFilePath, defaultSourceFilePath);
 			_configHelper.SetSetting(SettingNames.DefaultSourceDirectoryPath, defaultSourceDirectoryPath);
-			_configHelper.SetSetting(SettingNames.ClientLogin, clientLogin);
 			_configHelper.SetSetting(SettingNames.ClientOAuth2Id, clientOauthId);
 			_configHelper.SetSetting(SettingNames.ClientSecret, clientSecret);
 
@@ -157,14 +137,7 @@
 			{
 				var enterValuePrefix = $"Enter {settingName}";
 				Console.Write($"  {enterValuePrefix,-40}: ");
-				if (settingName == SettingNames.ClientPassword)
-				{
-					settingValue = GetPassword();
-				}
-				else
-				{
-					settingValue = Console.ReadLine();
-				}
+				settingValue = Console.ReadLine();
 			}
 			else if (printValueIfAlreadySet)
 			{
@@ -193,35 +166,6 @@
 				}
 			}
 		}
-
-		private string GetPassword()
-		{
-			var pwd = string.Empty;
-			while (true)
-			{
-				ConsoleKeyInfo i = Console.ReadKey(true);
-				if (i.Key == ConsoleKey.Enter)
-				{
-					break;
-				}
-				if (i.Key == ConsoleKey.Backspace)
-				{
-					if (pwd.Length > 0)
-					{
-						pwd = pwd.Remove(pwd.Length - 1);
-						Console.Write("\b \b");
-					}
-				}
-				else if (i.KeyChar != '\u0000') // KeyChar == '\u0000' if the key pressed does not correspond to a printable character, e.g. F1, Pause-Break, etc
-				{
-					pwd += i.KeyChar;
-					Console.Write("*");
-				}
-			}
-			Console.WriteLine();
-			return pwd;
-		}
-
 
 		private void PrintMenu()
 		{
