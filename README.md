@@ -23,16 +23,15 @@ The library supports `.NETStandard 2.0`, which means it is cross-platform. You c
 - Sample code contains accurate comments describing the flow.
 
 
-| Sample name | .Net |
-| ------ | ------ |
-| Sample1_BearerTokenAuthentication | [Sample1_BearerTokenAuthentication](https://github.com/relativitydev/relativity-transfer-sdk-samples/blob/main/Source/Relativity.Transfer.SDK.Sample/Samples/Sample1_BearerTokenAuthentication.cs) |
-| Sample2_BasicCredentialsAndBearerAuthentication | [Sample2_BasicCredentialsAndBearerAuthentication](https://github.com/relativitydev/relativity-transfer-sdk-samples/blob/main/Source/Relativity.Transfer.SDK.Sample/Samples/Sample2_BasicCredentialsAndBearerAuthentication.cs) |
-| Sample3_SettingUpProgressHandlerAndPrintingSummary | [Sample3_SettingUpProgressHandlerAndPrintingSummary](https://github.com/relativitydev/relativity-transfer-sdk-samples/blob/main/Source/Relativity.Transfer.SDK.Sample/Samples/Sample3_SettingUpProgressHandlerAndPrintingSummary.cs) |
-| Sample4_UploadSingleFile | [Sample4_UploadSingleFile](https://github.com/relativitydev/relativity-transfer-sdk-samples/blob/main/Source/Relativity.Transfer.SDK.Sample/Samples/Sample4_UploadSingleFile.cs) |
-| Sample5_UploadDirectory | [Sample5_UploadDirectory](https://github.com/relativitydev/relativity-transfer-sdk-samples/blob/main/Source/Relativity.Transfer.SDK.Sample/Samples/Sample5_UploadDirectory.cs) |
-| Sample6_UploadDirectoryWithCustomizedRetryPolicy | [Sample6_UploadDirectoryWithCustomizedRetryPolicy](https://github.com/relativitydev/relativity-transfer-sdk-samples/blob/main/Source/Relativity.Transfer.SDK.Sample/Samples/Sample6_UploadDirectoryWithCustomizedRetryPolicy.cs) |
-| Sample7_UploadDirectoryWithExclusionPolicy | [Sample7_UploadDirectoryWithExclusionPolicy](https://github.com/relativitydev/relativity-transfer-sdk-samples/blob/main/Source/Relativity.Transfer.SDK.Sample/Samples/Sample7_UploadDirectoryWithExclusionPolicy.cs) |
-| Sample8_UploadToFilesharePathBasedOnWorkspaceId | [Sample8_UploadToFilesharePathBasedOnWorkspaceId](https://github.com/relativitydev/relativity-transfer-sdk-samples/blob/main/Source/Relativity.Transfer.SDK.Sample/Samples/Sample8_UploadToFilesharePathBasedOnWorkspaceId.cs)
+| Sample name                                        | .Net                                                                                                                                                                                                                                 |
+|----------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Sample1_BearerTokenAuthentication                  | [Sample1_BearerTokenAuthentication](https://github.com/relativitydev/relativity-transfer-sdk-samples/blob/main/Source/Relativity.Transfer.SDK.Sample/Samples/Sample1_BearerTokenAuthentication.cs)                                   |
+| Sample2_SettingUpProgressHandlerAndPrintingSummary | [Sample2_SettingUpProgressHandlerAndPrintingSummary](https://github.com/relativitydev/relativity-transfer-sdk-samples/blob/main/Source/Relativity.Transfer.SDK.Sample/Samples/Sample2_SettingUpProgressHandlerAndPrintingSummary.cs) |
+| Sample3_UploadSingleFile                           | [Sample3_UploadSingleFile](https://github.com/relativitydev/relativity-transfer-sdk-samples/blob/main/Source/Relativity.Transfer.SDK.Sample/Samples/Sample3_UploadSingleFile.cs)                                                     |
+| Sample4_UploadDirectory                            | [Sample4_UploadDirectory](https://github.com/relativitydev/relativity-transfer-sdk-samples/blob/main/Source/Relativity.Transfer.SDK.Sample/Samples/Sample4_UploadDirectory.cs)                                                       |
+| Sample5_UploadDirectoryWithCustomizedRetryPolicy   | [Sample5_UploadDirectoryWithCustomizedRetryPolicy](https://github.com/relativitydev/relativity-transfer-sdk-samples/blob/main/Source/Relativity.Transfer.SDK.Sample/Samples/Sample5_UploadDirectoryWithCustomizedRetryPolicy.cs)     |
+| Sample6_UploadDirectoryWithExclusionPolicy         | [Sample6_UploadDirectoryWithExclusionPolicy](https://github.com/relativitydev/relativity-transfer-sdk-samples/blob/main/Source/Relativity.Transfer.SDK.Sample/Samples/Sample6_UploadDirectoryWithExclusionPolicy.cs)                 |
+| Sample7_UploadToFilesharePathBasedOnWorkspaceId    | [Sample7_UploadToFilesharePathBasedOnWorkspaceId](https://github.com/relativitydev/relativity-transfer-sdk-samples/blob/main/Source/Relativity.Transfer.SDK.Sample/Samples/Sample7_UploadToFilesharePathBasedOnWorkspaceId.cs)       
 
 ## Running the sample
 
@@ -75,8 +74,6 @@ The library supports `.NETStandard 2.0`, which means it is cross-platform. You c
     - The token can become obsolete after some time. It's the `AuthenticationProvider` responsibility to always return a valid token.
 - Client id and secret can be read from the Relativity instance. It is under the `Oauth2 Client` tab. Appropriate users can be identified by the `Context User` column.
     - The secret is valid for only a limited period of time (8 hours by default), so it is advised to regenerate it before copying.
-- Also the [REST service](https://platform.relativity.com/10.3/Content/Authentication/OAuth2_clients.htm#_OAuth2_Client_Manager_REST_service) can be used to automatically refresh the client secret. In order to do that [Basic authentication](https://platform.relativity.com/RelativityOne/Content/REST_API/REST_API_authentication.htm#_Basic_authentication) (see [Sample2](https://github.com/relativitydev/relativity-transfer-sdk-samples/blob/main/Source/Relativity.Transfer.SDK.Sample/Samples/Sample2_BasicCredentialsAndBearerAuthentication.cs), [OauthClientManager](https://github.com/relativitydev/relativity-transfer-sdk-samples/blob/main/Source/Relativity.Transfer.SDK.Sample/Authentication/OAuthClientManager.cs)) is used. 
-    - Warning - this type of authentication will become deprecated in Relativity at the end of 2023. 
 - It is strongly recommended to implement your own authentication mechanism which best suits your needs. Here are some helpful links: 
     - [Relativity REST API authentication](https://platform.relativity.com/RelativityOne/Content/REST_API/REST_API_authentication.htm)
     - [OAuth2 clients](https://platform.relativity.com/10.3/Content/Authentication/OAuth2_clients.htm#_OAuth2_Client_Manager_REST_service)
