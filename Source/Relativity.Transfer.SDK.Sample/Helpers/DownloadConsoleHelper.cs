@@ -13,25 +13,43 @@ namespace Relativity.Transfer.SDK.Sample.Helpers
 
         public override DirectoryPath GetDestinationDirectoryPath()
         {
-            var downloadCatalog = ConfigHelper.GetSettingOrPlaceholder(SettingNames.DownloadCatalog);
-
-            if (!Directory.Exists(downloadCatalog))
+            var overwriteDefaultSetting = false;
+            while (true)
             {
-                //Here throw exception and ask for new path
-            }
+                Console.Write("  Directory Path: ");
+                var path = Console.ReadLine();
+                if (string.IsNullOrWhiteSpace(path))
+                {
+                    path = GetOrEnterSetting(SettingNames.DownloadCatalog);
+                    overwriteDefaultSetting = true;
+                }
+                
+                if (!Directory.Exists(path))
+                {
+                    Console.WriteLine($"  Directory \"{path}\" does not exist.");
+                    continue;
+                }
+                
+                if (overwriteDefaultSetting)
+                {
+                    ConfigHelper.SetSetting(SettingNames.DownloadCatalog, path);
+                }
 
-            var fullpath = Path.Combine(downloadCatalog, TransferJobId.ToString());
+                var fullpath = Path.Combine(path, TransferJobId.ToString());
 
-            try
-            {
-                Directory.CreateDirectory(fullpath);
+                try
+                {
+                    Directory.CreateDirectory(fullpath);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("  Error creating directory: " + ex.Message);
+                    continue;
+                }
+                
+                
+                return new DirectoryPath(fullpath);
             }
-            catch (Exception ex)
-            {
-                //Handling here
-            }
-
-            return new DirectoryPath(fullpath);
         }
 
         public override DirectoryPath EnterSourceDirectoryPathOrTakeDefault()
