@@ -24,8 +24,9 @@
 			var clientId = _consoleHelper.GetOrEnterSetting(SettingNames.ClientOAuth2Id);
 			var clientSecret = _consoleHelper.GetOrEnterSetting(SettingNames.ClientSecret);
 			var transferJobId = Guid.NewGuid();
+			_consoleHelper.SetupTransferJobId(transferJobId);
 			var sourcePath = CreateTemporarySourceFile();
-			var destinationPath = _consoleHelper.GetDestinationDirectoryPath(transferJobId.ToString());
+			var destinationPath = _consoleHelper.GetDestinationDirectoryPath();
 
 			var authenticationProvider = new ClientSecretAuthenticationProvider(new Uri(relativityInstanceAddress), clientId, clientSecret);
 
