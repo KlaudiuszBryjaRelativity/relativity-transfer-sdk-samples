@@ -63,5 +63,17 @@ namespace Relativity.Transfer.SDK.Sample.Helpers
             var fileshareDestinationFolder = GetOrEnterSetting(SettingNames.FileshareRelativeDestinationPath);
             return new DirectoryPath(Path.Combine(fileshareRootPath, fileshareDestinationFolder, destinationFolder));
         }
+
+        public override FilePath EnterSourceFilePathOrTakeDefault()
+        {
+            var destinationFile = ConfigHelper.GetSettingOrPlaceholder(SettingNames.DefaultSourceFilePath);
+            
+            Console.WriteLine($"  Provide path to the directory you want to {nameof(TransferDirection)} {DirectionPreposition} RelativityOne:");
+            Console.WriteLine($"	 (keep it empty to use default path: \"{destinationFile}\"");
+            
+            var fileshareRootPath = GetOrEnterSetting(SettingNames.RelativityOneFileshareRoot);
+            var fileshareDestinationFolder = GetOrEnterSetting(SettingNames.FileshareRelativeDestinationPath);
+            return new FilePath(Path.Combine(fileshareRootPath, fileshareDestinationFolder, destinationFile));
+        }
     }
 }

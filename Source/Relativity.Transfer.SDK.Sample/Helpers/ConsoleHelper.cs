@@ -350,7 +350,7 @@
 			}
 		}
 
-		public FilePath EnterSourceFilePathOrTakeDefault()
+		public virtual FilePath EnterSourceFilePathOrTakeDefault()
 		{
 			Console.WriteLine($"  Provide path to the directory you want to {nameof(TransferDirection)} {DirectionPreposition} RelativityOne:");
 			Console.WriteLine($"	 (keep it empty to use default path: \"{ConfigHelper.GetSettingOrPlaceholder(SettingNames.DefaultSourceFilePath)}\"");
