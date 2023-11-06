@@ -13,7 +13,7 @@
 
 	internal class Sample1_BearerTokenAuthentication : SampleBase
 	{
-		public Sample1_BearerTokenAuthentication(ConsoleHelper consoleHelper) : base(consoleHelper) { }
+		public Sample1_BearerTokenAuthentication(IConsoleHelper consoleHelper) : base(consoleHelper) { }
 
 		public override async Task ExecuteAsync()
 		{
@@ -24,10 +24,8 @@
 			var clientId = _consoleHelper.GetOrEnterSetting(SettingNames.ClientOAuth2Id);
 			var clientSecret = _consoleHelper.GetOrEnterSetting(SettingNames.ClientSecret);
 			var transferJobId = Guid.NewGuid();
-			_consoleHelper.SetupTransferJobId(transferJobId);
 			var sourcePath = CreateTemporarySourceFile();
-			var destinationPath = _consoleHelper.GetDestinationDirectoryPath();
-
+			var destinationPath = _consoleHelper.GetDestinationDirectoryPath(transferJobId.ToString());
 			var authenticationProvider = new ClientSecretAuthenticationProvider(new Uri(relativityInstanceAddress), clientId, clientSecret);
 
 			// Builder follows Fluent convention, we'll add more options in the future. The only required component (besides the client name)

@@ -9,7 +9,7 @@ namespace Relativity.Transfer.SDK.Sample.Samples
 {
     internal class Sample9_DownloadDirectory : SampleBase
     {
-        public Sample9_DownloadDirectory(ConsoleHelper consoleHelper) : base(consoleHelper) { }
+        public Sample9_DownloadDirectory(IConsoleHelper consoleHelper) : base(consoleHelper) { }
         
         public override async Task ExecuteAsync()
         {
@@ -20,9 +20,8 @@ namespace Relativity.Transfer.SDK.Sample.Samples
             var clientId = _consoleHelper.GetOrEnterSetting(SettingNames.ClientOAuth2Id);
             var clientSecret = _consoleHelper.GetOrEnterSetting(SettingNames.ClientSecret);
             var transferJobId = Guid.NewGuid();
-            _consoleHelper.SetupTransferJobId(transferJobId);
-            var sourcePath = _consoleHelper.EnterSourceDirectoryPathOrTakeDefault();
-            var destinationPath = _consoleHelper.GetDestinationDirectoryPath();
+            var sourcePath = _consoleHelper.EnterSourceFilePathOrTakeDefault();
+            var destinationPath = _consoleHelper.GetDestinationDirectoryPath(transferJobId.ToString());
 
             var authenticationProvider = new RelativityAuthenticationProvider(relativityInstanceAddress, new OAuthCredentials(clientId, clientSecret));
 
@@ -38,7 +37,7 @@ namespace Relativity.Transfer.SDK.Sample.Samples
             Console.WriteLine();
 
             var result = await transferClient
-                .DownloadDirectoryAsync(transferJobId, sourcePath, destinationPath, ConsoleStatisticHook.GetProgressHandler(), default)
+                .DownloadFileAsync(transferJobId, sourcePath, destinationPath, ConsoleStatisticHook.GetProgressHandler(), default)
                 .ConfigureAwait(false);
 
             Console.WriteLine();

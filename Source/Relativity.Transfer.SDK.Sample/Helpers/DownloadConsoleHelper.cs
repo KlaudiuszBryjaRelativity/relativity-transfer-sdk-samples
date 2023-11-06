@@ -1,17 +1,48 @@
 ﻿using System;
 using System.IO;
+using System.Threading.Tasks;
 using Relativity.Transfer.SDK.Interfaces.Paths;
+using Relativity.Transfer.SDK.Sample.Samples;
 
 namespace Relativity.Transfer.SDK.Sample.Helpers
 {
-    internal class DownloadConsoleHelper : ConsoleHelper
+    internal class DownloadConsoleHelper : IConsoleHelper
     {
-        public DownloadConsoleHelper(ConfigHelper configHelper) : base(configHelper)
-        { }
+        private readonly IConsoleHelper _consoleHelper;
+        private readonly IConfigProvider _configProvider;
 
-        protected override TransferDirection TransferDirection => TransferDirection.Download;
+        public DownloadConsoleHelper(IConsoleHelper consoleHelper, IConfigProvider configProvider)
+        {
+            _consoleHelper = consoleHelper;
+            _configProvider = configProvider;
+        }
 
-        public override DirectoryPath GetDestinationDirectoryPath()
+        public void RegisterSample(char key, SampleBase sample)
+        {
+            _consoleHelper.RegisterSample(key, sample);
+        }
+
+        public bool InitStartupSettings()
+        {
+            return _consoleHelper.InitStartupSettings();
+        }
+
+        public async Task RunMenuAsync()
+        {
+            await _consoleHelper.RunMenuAsync().ConfigureAwait(false);
+        }
+
+        public string GetOrEnterSetting(string settingName, bool printValueIfAlreadySet = true)
+        {
+            return _consoleHelper.GetOrEnterSetting(settingName, printValueIfAlreadySet);
+        }
+
+        public string EnterUntilValid(string askingtext, string validationPattern)
+        {
+            return _consoleHelper.EnterUntilValid(askingtext, validationPattern);
+        }
+
+        public DirectoryPath GetDestinationDirectoryPath(string transferJobId)
         {
             var overwriteDefaultSetting = false;
             while (true)
@@ -20,7 +51,7 @@ namespace Relativity.Transfer.SDK.Sample.Helpers
                 var path = Console.ReadLine();
                 if (string.IsNullOrWhiteSpace(path))
                 {
-                    path = GetOrEnterSetting(SettingNames.DownloadCatalog);
+                    path = _configProvider.DownloadCatalog;
                     overwriteDefaultSetting = true;
                 }
                 
@@ -32,10 +63,10 @@ namespace Relativity.Transfer.SDK.Sample.Helpers
                 
                 if (overwriteDefaultSetting)
                 {
-                    ConfigHelper.SetSetting(SettingNames.DownloadCatalog, path);
+                    _configProvider.DownloadCatalog = path;
                 }
 
-                var fullpath = Path.Combine(path, TransferJobId.ToString());
+                var fullpath = Path.Combine(path, transferJobId);
 
                 try
                 {
@@ -46,34 +77,33 @@ namespace Relativity.Transfer.SDK.Sample.Helpers
                     Console.WriteLine("  Error creating directory: " + ex.Message);
                     continue;
                 }
-                
-                
+
                 return new DirectoryPath(fullpath);
             }
         }
 
-        public override DirectoryPath EnterSourceDirectoryPathOrTakeDefault()
+        public DirectoryPath EnterSourceDirectoryPathOrTakeDefault()
         {
-            var destinationFolder = ConfigHelper.GetSettingOrPlaceholder(SettingNames.DefaultSourceDirectoryPath);
+            var sourceDirectoryPath = _configProvider.DefaultSourceDirectoryPath;
             
-            Console.WriteLine($"  Provide path to the directory you want to {nameof(TransferDirection)} {DirectionPreposition} RelativityOne:");
-            Console.WriteLine($"	 (keep it empty to use default path: \"{destinationFolder}\"");
+            Console.WriteLine($"  Provide path to the directory you want to {nameof(TransferDirection.Download)} from RelativityOne:");
+            Console.WriteLine($"	 (keep it empty to use default path: \"{sourceDirectoryPath}\"");
             
             var fileshareRootPath = GetOrEnterSetting(SettingNames.RelativityOneFileshareRoot);
             var fileshareDestinationFolder = GetOrEnterSetting(SettingNames.FileshareRelativeDestinationPath);
-            return new DirectoryPath(Path.Combine(fileshareRootPath, fileshareDestinationFolder, destinationFolder));
+            return new DirectoryPath(Path.Combine(fileshareRootPath, fileshareDestinationFolder, sourceDirectoryPath));
         }
 
-        public override FilePath EnterSourceFilePathOrTakeDefault()
+        public FilePath EnterSourceFilePathOrTakeDefault()
         {
-            var destinationFile = ConfigHelper.GetSettingOrPlaceholder(SettingNames.DefaultSourceFilePath);
+            var sourceFilePath = _configProvider.DefaultSourceFilePath;
             
-            Console.WriteLine($"  Provide path to the directory you want to {nameof(TransferDirection)} {DirectionPreposition} RelativityOne:");
-            Console.WriteLine($"	 (keep it empty to use default path: \"{destinationFile}\"");
+            Console.WriteLine($"  Provide path to the directory you want to {nameof(TransferDirection.Download)} from RelativityOne:");
+            Console.WriteLine($"	 (keep it empty to use default path: \"{sourceFilePath}\"");
             
             var fileshareRootPath = GetOrEnterSetting(SettingNames.RelativityOneFileshareRoot);
             var fileshareDestinationFolder = GetOrEnterSetting(SettingNames.FileshareRelativeDestinationPath);
-            return new FilePath(Path.Combine(fileshareRootPath, fileshareDestinationFolder, destinationFile));
+            return new FilePath(Path.Combine(fileshareRootPath, fileshareDestinationFolder, sourceFilePath));
         }
     }
 }

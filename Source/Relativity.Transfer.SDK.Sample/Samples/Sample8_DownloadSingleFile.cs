@@ -9,7 +9,7 @@
     
     internal class Sample8_DownloadSingleFile : SampleBase
     {
-        public Sample8_DownloadSingleFile(ConsoleHelper consoleHelper) : base(consoleHelper) {}
+        public Sample8_DownloadSingleFile(IConsoleHelper consoleHelper) : base(consoleHelper) {}
 
         public override async Task ExecuteAsync()
         {
@@ -20,9 +20,8 @@
             var clientId = _consoleHelper.GetOrEnterSetting(SettingNames.ClientOAuth2Id);
             var clientSecret = _consoleHelper.GetOrEnterSetting(SettingNames.ClientSecret);
             var transferJobId = Guid.NewGuid();
-            _consoleHelper.SetupTransferJobId(transferJobId);
             var sourcePath = _consoleHelper.EnterSourceFilePathOrTakeDefault();
-            var destinationPath = _consoleHelper.GetDestinationDirectoryPath();
+            var destinationPath = _consoleHelper.GetDestinationDirectoryPath(transferJobId.ToString());
 
             var authenticationProvider = new RelativityAuthenticationProvider(relativityInstanceAddress, new OAuthCredentials(clientId, clientSecret));
 

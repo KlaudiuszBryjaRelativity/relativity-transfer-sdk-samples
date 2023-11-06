@@ -32,9 +32,8 @@
 			var clientId = _consoleHelper.GetOrEnterSetting(SettingNames.ClientOAuth2Id);
 			var clientSecret = _consoleHelper.GetOrEnterSetting(SettingNames.ClientSecret);
 			var transferJobId = Guid.NewGuid();
-			_consoleHelper.SetupTransferJobId(transferJobId);
 			var sourcePath = CreateTemporaryDirectoryWithFiles(transferJobId.ToString(), smallFilesAmountToUpload, largeFilesAmountToUpload, largeFileSize);
-			var destinationPath = _consoleHelper.GetDestinationDirectoryPath();
+			var destinationPath = _consoleHelper.GetDestinationDirectoryPath(transferJobId.ToString());
 
 			var authenticationProvider = new RelativityAuthenticationProvider(relativityInstanceAddress, new OAuthCredentials(clientId, clientSecret));
 

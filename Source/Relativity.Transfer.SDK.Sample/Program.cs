@@ -9,8 +9,9 @@
 		private static async Task Main()
 		{
 			ConfigHelper configHelper = new ConfigHelper();
-			ConsoleHelper consoleHelper = new ConsoleHelper(configHelper);
-			DownloadConsoleHelper downloadConsoleHelper = new DownloadConsoleHelper(configHelper);
+			ConfigProvider configProvider = new ConfigProvider(configHelper);
+			ConsoleHelper consoleHelper = new ConsoleHelper(configHelper, configProvider);
+			DownloadConsoleHelper downloadConsoleHelper = new DownloadConsoleHelper(consoleHelper, configProvider);
 
 			if( !consoleHelper.InitStartupSettings())
 			{
