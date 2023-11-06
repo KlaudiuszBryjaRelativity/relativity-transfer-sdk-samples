@@ -304,8 +304,8 @@
 
 		public DirectoryPath GetDestinationDirectoryPath(string transferJobId)
 		{
-			var fileshareRootPath = _configProvider.RelativityOneFileshareRoot;
-			var fileshareDestinationFolder = _configProvider.FileshareRelativeDestinationPath;
+			var fileshareRootPath = GetOrEnterSetting(SettingNames.RelativityOneFileshareRoot);
+			var fileshareDestinationFolder = GetOrEnterSetting(SettingNames.FileshareRelativeDestinationPath);
 			return new DirectoryPath(Path.Combine(fileshareRootPath, fileshareDestinationFolder, transferJobId));
 		}
 
@@ -321,7 +321,7 @@
 				var path = Console.ReadLine();
 				if (string.IsNullOrWhiteSpace(path))
 				{
-					path = _configProvider.DefaultSourceDirectoryPath;
+					path = GetOrEnterSetting(SettingNames.DefaultSourceDirectoryPath);
 					overwriteDefaultSetting = true;
 				}
 
