@@ -10,7 +10,6 @@
 	{
 		private readonly BearerTokenRetriever _bearerTokenRetriever;
 		private readonly OAuthCredentials _secretCredentials;
-		private readonly BasicCredentials _basicCredentials;
 
 		private string _bearerToken;
 
