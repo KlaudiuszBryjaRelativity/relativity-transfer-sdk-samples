@@ -47,11 +47,12 @@ namespace Relativity.Transfer.SDK.Sample.Helpers
             var overwriteDefaultSetting = false;
             while (true)
             {
-                Console.Write("  Directory Path: ");
+                var defaultPath = GetOrEnterSetting(SettingNames.DownloadCatalog);
+                Console.Write($"  Provide path to where transfer should download or leave empty for default '{defaultPath}' : ");
                 var path = Console.ReadLine();
                 if (string.IsNullOrWhiteSpace(path))
                 {
-                    path = _configProvider.DownloadCatalog;
+                    path = defaultPath;
                     overwriteDefaultSetting = true;
                 }
                 
@@ -86,8 +87,23 @@ namespace Relativity.Transfer.SDK.Sample.Helpers
         {
             var sourceDirectoryPath = _configProvider.DefaultSourceDirectoryPath;
             
-            Console.WriteLine($"  Provide path to the directory you want to {nameof(TransferDirection.Download)} from RelativityOne:");
+            Console.WriteLine($"  Provide path to the directory you want to download from RelativityOne:");
             Console.WriteLine($"	 (keep it empty to use default path: \"{sourceDirectoryPath}\"");
+            
+            var overwriteDefaultSetting = false;
+
+            Console.Write("  Directory Path: ");
+            var path = Console.ReadLine();
+            if (!string.IsNullOrWhiteSpace(path))
+            {
+                sourceDirectoryPath = path;
+                overwriteDefaultSetting = true;
+            }
+
+            if (overwriteDefaultSetting)
+            {
+                _configProvider.DefaultSourceFilePath = sourceDirectoryPath;
+            }
             
             var fileshareRootPath = GetOrEnterSetting(SettingNames.RelativityOneFileshareRoot);
             var fileshareDestinationFolder = GetOrEnterSetting(SettingNames.FileshareRelativeDestinationPath);
@@ -98,9 +114,24 @@ namespace Relativity.Transfer.SDK.Sample.Helpers
         {
             var sourceFilePath = _configProvider.DefaultSourceFilePath;
             
-            Console.WriteLine($"  Provide path to the directory you want to {nameof(TransferDirection.Download)} from RelativityOne:");
+            Console.WriteLine($"  Provide path to the directory you want to download from RelativityOne:");
             Console.WriteLine($"	 (keep it empty to use default path: \"{sourceFilePath}\"");
             
+            var overwriteDefaultSetting = false;
+
+            Console.Write("  File Path: ");
+            var path = Console.ReadLine();
+            if (!string.IsNullOrWhiteSpace(path))
+            {
+                sourceFilePath = path;
+                overwriteDefaultSetting = true;
+            }
+
+            if (overwriteDefaultSetting)
+            {
+                _configProvider.DefaultSourceFilePath = sourceFilePath;
+            }
+
             var fileshareRootPath = GetOrEnterSetting(SettingNames.RelativityOneFileshareRoot);
             var fileshareDestinationFolder = GetOrEnterSetting(SettingNames.FileshareRelativeDestinationPath);
             return new FilePath(Path.Combine(fileshareRootPath, fileshareDestinationFolder, sourceFilePath));

@@ -343,7 +343,7 @@
 
 		public virtual FilePath EnterSourceFilePathOrTakeDefault()
 		{
-			Console.WriteLine($"  Provide path to the directory you want to {nameof(TransferDirection.Upload)} to RelativityOne:");
+			Console.WriteLine($"  Provide path to the file you want to {nameof(TransferDirection.Upload)} to RelativityOne:");
 			Console.WriteLine($"	 (keep it empty to use default path: \"{_configProvider.DefaultSourceFilePath}\"");
 
 			var overwriteDefaultSetting = false;
