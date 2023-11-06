@@ -44,7 +44,5 @@ namespace Relativity.Transfer.SDK.Sample.Samples
             Console.WriteLine($"Transfer has finished: ");
             Console.WriteLine(new TransferJobSummary(result));
         }
-
-
     }
 }
