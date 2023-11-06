@@ -31,7 +31,9 @@ The library supports `.NETStandard 2.0`, which means it is cross-platform. You c
 | Sample4_UploadDirectory                            | [Sample4_UploadDirectory](https://github.com/relativitydev/relativity-transfer-sdk-samples/blob/main/Source/Relativity.Transfer.SDK.Sample/Samples/Sample4_UploadDirectory.cs)                                                       |
 | Sample5_UploadDirectoryWithCustomizedRetryPolicy   | [Sample5_UploadDirectoryWithCustomizedRetryPolicy](https://github.com/relativitydev/relativity-transfer-sdk-samples/blob/main/Source/Relativity.Transfer.SDK.Sample/Samples/Sample5_UploadDirectoryWithCustomizedRetryPolicy.cs)     |
 | Sample6_UploadDirectoryWithExclusionPolicy         | [Sample6_UploadDirectoryWithExclusionPolicy](https://github.com/relativitydev/relativity-transfer-sdk-samples/blob/main/Source/Relativity.Transfer.SDK.Sample/Samples/Sample6_UploadDirectoryWithExclusionPolicy.cs)                 |
-| Sample7_UploadToFilesharePathBasedOnWorkspaceId    | [Sample7_UploadToFilesharePathBasedOnWorkspaceId](https://github.com/relativitydev/relativity-transfer-sdk-samples/blob/main/Source/Relativity.Transfer.SDK.Sample/Samples/Sample7_UploadToFilesharePathBasedOnWorkspaceId.cs)       
+| Sample7_UploadToFilesharePathBasedOnWorkspaceId    | [Sample7_UploadToFilesharePathBasedOnWorkspaceId](https://github.com/relativitydev/relativity-transfer-sdk-samples/blob/main/Source/Relativity.Transfer.SDK.Sample/Samples/Sample7_UploadToFilesharePathBasedOnWorkspaceId.cs)       |
+| Sample8_DownloadFile                               | [Sample8_DownloadFile](https://github.com/relativitydev/relativity-transfer-sdk-samples/blob/main/Source/Relativity.Transfer.SDK.Sample/Samples/Sample8_DownloadFile.cs)                                                             |
+| Sample9_DownloadDirectory                          | [Sample9_DownloadDirectory](https://github.com/relativitydev/relativity-transfer-sdk-samples/blob/main/Source/Relativity.Transfer.SDK.Sample/Samples/Sample9_DownloadDirectory.cs)                                                   |
 
 ## Running the sample
 
@@ -55,6 +57,8 @@ The library supports `.NETStandard 2.0`, which means it is cross-platform. You c
         - The application will use this value when an empty path is provided.
     - `DefaultSourceDirectoryPath`.
         - The application will use this value when an empty path is provided.
+    - `DownloadCatalog`.
+      - The application will download the data to the specified location on local machine.
     - `ClientLogin`.
     - `ClentOauth2Id` - Relativity OAuthClient id, see `Authentication` section for more info.
     - `ClientPassword`.

@@ -8,7 +8,7 @@
 	<ItemGroup>
 		<PackageReference Include="ByteSize" Version="2.0.0" />
 		<PackageReference Include="Newtonsoft.Json" Version="10.0.2" />
-		<PackageReference Include="Relativity.Transfer.SDK" Version="1.13.0" /> <!-- 1.13.0 is the latest version avaliable on nuget should be changed after nuget.org release -->
+		<PackageReference Include="Relativity.Transfer.SDK" Version="1.16.0" />
 		<PackageReference Include="System.Configuration.ConfigurationManager" Version="6.0.0" />
 	</ItemGroup>
 
