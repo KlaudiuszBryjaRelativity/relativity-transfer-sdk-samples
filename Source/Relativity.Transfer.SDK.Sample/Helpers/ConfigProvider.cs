@@ -45,7 +45,7 @@
             set => _configHelper.SetSetting(SettingNames.DefaultSourceDirectoryPath, value);
         }
 
-        public string DownloadCatalog
+        public string DownloadDirectory
         {
             get => _configHelper.GetSettingOrPlaceholder(SettingNames.DownloadDirectory);
             set => _configHelper.SetSetting(SettingNames.DownloadDirectory, value);

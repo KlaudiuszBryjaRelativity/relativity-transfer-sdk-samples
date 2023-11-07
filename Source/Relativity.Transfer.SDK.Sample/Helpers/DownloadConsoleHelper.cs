@@ -64,7 +64,7 @@ namespace Relativity.Transfer.SDK.Sample.Helpers
                 
                 if (overwriteDefaultSetting)
                 {
-                    _configProvider.DownloadCatalog = path;
+                    _configProvider.DownloadDirectory = path;
                 }
 
                 var fullpath = Path.Combine(path, transferJobId);

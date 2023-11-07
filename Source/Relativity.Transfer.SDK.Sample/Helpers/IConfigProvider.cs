@@ -8,7 +8,7 @@
         string FileshareRelativeDestinationPath { get; set; }
         string DefaultSourceFilePath { get; set; }
         string DefaultSourceDirectoryPath { get; set; }
-        string DownloadCatalog { get; set; }
+        string DownloadDirectory { get; set; }
         string ClientSecret { get; set; }
         string ClientOAuth2Id { get; set; }
     }
