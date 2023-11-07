@@ -94,7 +94,8 @@
 			_configProvider.DefaultSourceDirectoryPath = defaultSourceDirectoryPath;
 			_configProvider.ClientOAuth2Id = clientOauthId;
 			_configProvider.ClientSecret = clientSecret;
-			_configProvider.DownloadDirectory = downloadCatalog;
+			_configProvider.DownloadDirectory = downloadDirectory;
+
 
 			Console.WriteLine($"  Settings updated successfully. Press any key to continue... ");
 			Console.ReadKey();
