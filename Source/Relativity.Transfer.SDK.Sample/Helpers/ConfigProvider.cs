@@ -47,8 +47,8 @@
 
         public string DownloadCatalog
         {
-            get => _configHelper.GetSettingOrPlaceholder(SettingNames.DownloadCatalog);
-            set => _configHelper.SetSetting(SettingNames.DownloadCatalog, value);
+            get => _configHelper.GetSettingOrPlaceholder(SettingNames.DownloadDirectory);
+            set => _configHelper.SetSetting(SettingNames.DownloadDirectory, value);
         }
 
         public string ClientSecret

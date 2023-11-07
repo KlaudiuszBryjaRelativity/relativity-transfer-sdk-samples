@@ -57,7 +57,7 @@ The library supports `.NETStandard 2.0`, which means it is cross-platform. You c
         - The application will use this value when an empty path is provided.
     - `DefaultSourceDirectoryPath`.
         - The application will use this value when an empty path is provided.
-    - `DownloadCatalog`.
+    - `DownloadDirectory`.
       - The application will download the data to the specified location on local machine.
     - `ClientLogin`.
     - `ClentOauth2Id` - Relativity OAuthClient id, see `Authentication` section for more info.

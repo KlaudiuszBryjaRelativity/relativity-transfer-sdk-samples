@@ -84,7 +84,7 @@
 			var defaultSourceDirectoryPath = GetOrEnterSetting(SettingNames.DefaultSourceDirectoryPath);
 			var clientOauthId = GetOrEnterSetting(SettingNames.ClientOAuth2Id);
 			var clientSecret = GetOrEnterSetting(SettingNames.ClientSecret);
-			var downloadCatalog = GetOrEnterSetting(SettingNames.DownloadCatalog);
+			var downloadCatalog = GetOrEnterSetting(SettingNames.DownloadDirectory);
 
 			_configProvider.ClientName = clientName;
 			_configProvider.RelativityOneInstanceUrl = relativityInstanceUrl;

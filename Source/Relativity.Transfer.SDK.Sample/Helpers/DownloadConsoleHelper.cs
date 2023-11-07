@@ -47,7 +47,7 @@ namespace Relativity.Transfer.SDK.Sample.Helpers
             var overwriteDefaultSetting = false;
             while (true)
             {
-                var defaultPath = GetOrEnterSetting(SettingNames.DownloadCatalog);
+                var defaultPath = GetOrEnterSetting(SettingNames.DownloadDirectory);
                 Console.Write($"  Provide path to where transfer should download or leave empty for default '{defaultPath}' : ");
                 var path = Console.ReadLine();
                 if (string.IsNullOrWhiteSpace(path))
