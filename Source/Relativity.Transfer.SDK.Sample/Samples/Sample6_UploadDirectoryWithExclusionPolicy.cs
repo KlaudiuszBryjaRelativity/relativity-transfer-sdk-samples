@@ -26,7 +26,6 @@
 			var clientId = _consoleHelper.GetOrEnterSetting(SettingNames.ClientOAuth2Id);
 			var clientSecret = _consoleHelper.GetOrEnterSetting(SettingNames.ClientSecret);
 			var transferJobId = Guid.NewGuid();
-
 			var destinationPath = _consoleHelper.GetDestinationDirectoryPath(transferJobId.ToString());
 
 			var authenticationProvider = new RelativityAuthenticationProvider(relativityInstanceAddress, new OAuthCredentials(clientId, clientSecret));

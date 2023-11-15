@@ -13,7 +13,7 @@
 
 	internal class Sample1_BearerTokenAuthentication : SampleBase
 	{
-		public Sample1_BearerTokenAuthentication(ConsoleHelper consoleHelper) : base(consoleHelper) { }
+		public Sample1_BearerTokenAuthentication(IConsoleHelper consoleHelper) : base(consoleHelper) { }
 
 		public override async Task ExecuteAsync()
 		{
@@ -26,7 +26,6 @@
 			var transferJobId = Guid.NewGuid();
 			var sourcePath = CreateTemporarySourceFile();
 			var destinationPath = _consoleHelper.GetDestinationDirectoryPath(transferJobId.ToString());
-
 			var authenticationProvider = new ClientSecretAuthenticationProvider(new Uri(relativityInstanceAddress), clientId, clientSecret);
 
 			// Builder follows Fluent convention, we'll add more options in the future. The only required component (besides the client name)

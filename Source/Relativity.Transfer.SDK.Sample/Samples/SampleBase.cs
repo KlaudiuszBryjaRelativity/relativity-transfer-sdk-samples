@@ -5,9 +5,9 @@
 
 	internal abstract class SampleBase
 	{
-		protected ConsoleHelper _consoleHelper;
+		protected IConsoleHelper _consoleHelper;
 
-		protected SampleBase( ConsoleHelper consoleHelper)
+		protected SampleBase(IConsoleHelper consoleHelper)
 		{
 			_consoleHelper = consoleHelper;
 		}

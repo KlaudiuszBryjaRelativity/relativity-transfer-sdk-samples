@@ -2,16 +2,14 @@
 {
 	using System;
 	using System.IO;
-	using System.Text;
 	using System.Text.RegularExpressions;
 	using System.Collections.Generic;
 	using System.Threading.Tasks;
 	using System.Runtime.InteropServices;
 	using Samples;
-	using Authentication;
 	using Interfaces.Paths;
 
-	internal class ConsoleHelper
+	internal class ConsoleHelper : IConsoleHelper
 	{
 		// Main menu keys 
 		private const char ConfigureSettingsKey = 'C';
@@ -22,9 +20,10 @@
 		private readonly char[] Keys = { '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', 'A', 'B', 'C', 'D', 'E', 'F' };
 
 		private readonly ConfigHelper _configHelper;
+		private readonly IConfigProvider _configProvider;
 		private readonly Dictionary<char, SampleBase> _samples;
 		private readonly Dictionary<char, string> _settings;
-
+		
 		private enum MenuState
 		{
 			Main = 0,
@@ -32,10 +31,11 @@
 		}
 
 		private MenuState _menuState = MenuState.Main;
-
-		public ConsoleHelper(ConfigHelper configHelper)
+		
+		public ConsoleHelper(ConfigHelper configHelper, IConfigProvider configProvider)
 		{
 			_configHelper = configHelper;
+			_configProvider = configProvider;
 			_samples = new Dictionary<char, SampleBase>();
 			_settings = new Dictionary<char, string>();
 			var index = 0;
@@ -84,14 +84,18 @@
 			var defaultSourceDirectoryPath = GetOrEnterSetting(SettingNames.DefaultSourceDirectoryPath);
 			var clientOauthId = GetOrEnterSetting(SettingNames.ClientOAuth2Id);
 			var clientSecret = GetOrEnterSetting(SettingNames.ClientSecret);
+			var downloadDirectory = GetOrEnterSetting(SettingNames.DownloadDirectory);
 
-			_configHelper.SetSetting(SettingNames.ClientName, clientName);
-			_configHelper.SetSetting(SettingNames.RelativityOneInstanceUrl, relativityInstanceUrl);
-			_configHelper.SetSetting(SettingNames.RelativityOneFileshareRoot, relativityFileshareRoot);
-			_configHelper.SetSetting(SettingNames.DefaultSourceFilePath, defaultSourceFilePath);
-			_configHelper.SetSetting(SettingNames.DefaultSourceDirectoryPath, defaultSourceDirectoryPath);
-			_configHelper.SetSetting(SettingNames.ClientOAuth2Id, clientOauthId);
-			_configHelper.SetSetting(SettingNames.ClientSecret, clientSecret);
+
+			_configProvider.ClientName = clientName;
+			_configProvider.RelativityOneInstanceUrl = relativityInstanceUrl;
+			_configProvider.RelativityOneFileshareRoot = relativityFileshareRoot;
+			_configProvider.DefaultSourceFilePath = defaultSourceFilePath;
+			_configProvider.DefaultSourceDirectoryPath = defaultSourceDirectoryPath;
+			_configProvider.ClientOAuth2Id = clientOauthId;
+			_configProvider.ClientSecret = clientSecret;
+			_configProvider.DownloadDirectory = downloadDirectory;
+
 
 			Console.WriteLine($"  Settings updated successfully. Press any key to continue... ");
 			Console.ReadKey();
@@ -300,17 +304,17 @@
 			return typeof(TransferClientBuilder).Assembly.GetName().Version;
 		}
 
-		public DirectoryPath GetDestinationDirectoryPath(string finalFolder)
+		public DirectoryPath GetDestinationDirectoryPath(string transferJobId)
 		{
 			var fileshareRootPath = GetOrEnterSetting(SettingNames.RelativityOneFileshareRoot);
 			var fileshareDestinationFolder = GetOrEnterSetting(SettingNames.FileshareRelativeDestinationPath);
-			return new DirectoryPath(Path.Combine(fileshareRootPath, fileshareDestinationFolder, finalFolder));
+			return new DirectoryPath(Path.Combine(fileshareRootPath, fileshareDestinationFolder, transferJobId));
 		}
 
 		public DirectoryPath EnterSourceDirectoryPathOrTakeDefault()
 		{
-			Console.WriteLine("  Provide path to the directory you want to upload to RelativityOne:");
-			Console.WriteLine($"	 (keep it empty to use default path: \"{_configHelper.GetSettingOrPlaceholder(SettingNames.DefaultSourceDirectoryPath)}\"");
+			Console.WriteLine($"  Provide path to the directory you want to upload to RelativityOne:");
+			Console.WriteLine($"	 (keep it empty to use default path: \"{_configProvider.DefaultSourceDirectoryPath}\"");
 
 			var overwriteDefaultSetting = false;
 			while (true)
@@ -331,7 +335,7 @@
 
 				if (overwriteDefaultSetting)
 				{
-					_configHelper.SetSetting(SettingNames.DefaultSourceDirectoryPath, path);
+					_configProvider.DefaultSourceDirectoryPath = path;
 				}
 
 				Console.WriteLine();
@@ -339,10 +343,10 @@
 			}
 		}
 
-		public FilePath EnterSourceFilePathOrTakeDefault()
+		public virtual FilePath EnterSourceFilePathOrTakeDefault()
 		{
-			Console.WriteLine("  Provide path to the directory you want to upload to RelativityOne:");
-			Console.WriteLine($"	 (keep it empty to use default path: \"{_configHelper.GetSettingOrPlaceholder(SettingNames.DefaultSourceFilePath)}\"");
+			Console.WriteLine($"  Provide path to the file you want to upload to RelativityOne:");
+			Console.WriteLine($"	 (keep it empty to use default path: \"{_configProvider.DefaultSourceFilePath}\"");
 
 			var overwriteDefaultSetting = false;
 			while (true)
@@ -351,7 +355,7 @@
 				var path = Console.ReadLine();
 				if (string.IsNullOrWhiteSpace(path))
 				{
-					path = GetOrEnterSetting(SettingNames.DefaultSourceFilePath);
+					path = _configProvider.DefaultSourceFilePath;
 					overwriteDefaultSetting = true;
 
 				}
@@ -364,7 +368,7 @@
 
 				if (overwriteDefaultSetting)
 				{
-					_configHelper.SetSetting(SettingNames.DefaultSourceFilePath, path);
+					_configProvider.DefaultSourceFilePath = path;
 				}
 
 				Console.WriteLine();

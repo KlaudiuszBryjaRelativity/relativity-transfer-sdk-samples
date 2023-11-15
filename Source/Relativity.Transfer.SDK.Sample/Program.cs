@@ -9,7 +9,9 @@
 		private static async Task Main()
 		{
 			ConfigHelper configHelper = new ConfigHelper();
-			ConsoleHelper consoleHelper = new ConsoleHelper(configHelper);
+			ConfigProvider configProvider = new ConfigProvider(configHelper);
+			ConsoleHelper consoleHelper = new ConsoleHelper(configHelper, configProvider);
+			DownloadConsoleHelper downloadConsoleHelper = new DownloadConsoleHelper(consoleHelper, configProvider);
 
 			if( !consoleHelper.InitStartupSettings())
 			{
@@ -23,6 +25,8 @@
 			consoleHelper.RegisterSample('5', new Sample5_UploadDirectoryWithCustomizedRetryPolicy(consoleHelper));
 			consoleHelper.RegisterSample('6', new Sample6_UploadDirectoryWithExclusionPolicy(consoleHelper));
 			consoleHelper.RegisterSample('7', new Sample7_UploadToFilesharePathBasedOnWorkspaceId(consoleHelper));
+			consoleHelper.RegisterSample('8', new Sample8_DownloadSingleFile(downloadConsoleHelper));
+			consoleHelper.RegisterSample('9', new Sample9_DownloadDirectory(downloadConsoleHelper));
 
 			await consoleHelper.RunMenuAsync();
 		}
