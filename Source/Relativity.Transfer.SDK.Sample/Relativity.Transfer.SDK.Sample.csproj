@@ -3,6 +3,7 @@
 	<PropertyGroup>
 		<OutputType>Exe</OutputType>
 		<TargetFrameworks>net462;net6.0</TargetFrameworks>
+		<LangVersion>latest</LangVersion>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -16,36 +17,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <None Update="Configuration\appsettings.Sample9_DownloadDirectory.json">
-	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </None>
-	  <None Update="Configuration\appsettings.Sample8_DownloadSingleFile.json">
-	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </None>
-	  <None Update="Configuration\appsettings.Sample7_UploadToFilesharePathBasedOnWorkspaceId.json">
-	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </None>
-	  <None Update="Configuration\appsettings.Sample6_UploadDirectoryWithExclusionPolicy.json">
-	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </None>
-	  <None Update="Configuration\appsettings.Sample5_UploadDirectoryWithCustomizedRetryPolicy.json">
-	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </None>
-	  <None Update="Configuration\appsettings.Sample4_UploadDirectory.json">
-	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </None>
-	  <None Update="Configuration\appsettings.Sample3_UploadSingleFile.json">
-	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </None>
-	  <None Update="Configuration\appsettings.Sample2_SettingUpProgressHandlerAndPrintingSummary.json">
-	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </None>
-	  <None Update="Configuration\appsettings.Sample1_BearerTokenAuthentication.json">
-	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </None>
-	  <None Update="appsettings.json">
-	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </None>
+		<None Update="appsettings.json">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
 	</ItemGroup>
 
 </Project>

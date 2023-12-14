@@ -1,14 +1,3 @@
-﻿namespace Relativity.Transfer.SDK.Sample.Authentication.Credentials
-{
-	internal class OAuthCredentials
-	{
-		public OAuthCredentials(string clientId, string clientSecret)
-		{
-			ClientId = clientId;
-			ClientSecret = clientSecret;
-		}
+﻿namespace Relativity.Transfer.SDK.Sample.Authentication.Credentials;
 
-		public string ClientId { get; }
-		public string ClientSecret { get; }
-	}
-}
+internal sealed record OAuthCredentials(string ClientId, string ClientSecret);

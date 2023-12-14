@@ -1,49 +1,64 @@
-﻿namespace Relativity.Transfer.SDK.Sample.Authentication
+﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
+using Nito.AsyncEx;
+using Relativity.Transfer.SDK.Interfaces.Authentication;
+using Relativity.Transfer.SDK.Sample.Authentication.Credentials;
+using Relativity.Transfer.SDK.Sample.Configuration;
+using Relativity.Transfer.SDK.Sample.Helpers;
+
+namespace Relativity.Transfer.SDK.Sample.Authentication;
+
+internal class RelativityAuthenticationProvider : IRelativityAuthenticationProvider
 {
-	using System;
-	using System.Threading;
-	using System.Threading.Tasks;
-	using Interfaces.Authentication;
-	using Credentials;
+	private readonly AsyncLock _asyncLock;
+	private readonly IBearerTokenRetriever _bearerTokenRetriever;
+	private readonly IConsoleLogger _consoleLogger;
+	private readonly OAuthCredentials _secretCredentials;
+	private string _bearerToken;
 
-	internal class RelativityAuthenticationProvider : IRelativityAuthenticationProvider
+	public RelativityAuthenticationProvider(CommonConfiguration common, IConsoleLogger consoleLogger,
+		IBearerTokenRetriever bearerTokenRetriever)
 	{
-		private readonly BearerTokenRetriever _bearerTokenRetriever;
-		private readonly OAuthCredentials _secretCredentials;
+		if (HasMissingOAuthParameters(common)) throw new ArgumentException("Invalid Authentication arguments");
 
-		private string _bearerToken;
+		BaseAddress = new Uri(common.InstanceUrl);
+		_secretCredentials = common.OAuthCredentials;
+		_consoleLogger = consoleLogger;
+		_bearerTokenRetriever = bearerTokenRetriever;
+		_asyncLock = new AsyncLock();
+	}
 
-		public RelativityAuthenticationProvider(string relativityInstanceUrl, OAuthCredentials secretCredentials)
+	public Uri BaseAddress { get; }
+
+	public async Task<RelativityCredentials> GetCredentialsAsync(CancellationToken token)
+	{
+		try
 		{
-			if( string.IsNullOrWhiteSpace(relativityInstanceUrl) || null == secretCredentials || string.IsNullOrWhiteSpace(secretCredentials.ClientId) || string.IsNullOrWhiteSpace(secretCredentials.ClientSecret))
+			using var _ = await _asyncLock.LockAsync(token).ConfigureAwait(false);
+
+			if (!string.IsNullOrWhiteSpace(_bearerToken))
 			{
-				throw new ArgumentException("Invalid Authentication arguments");
-			}
-			BaseAddress = new Uri(relativityInstanceUrl);
-			_secretCredentials = secretCredentials;
-			_bearerTokenRetriever = new BearerTokenRetriever(relativityInstanceUrl);
-		}
-
-		public Uri BaseAddress { get; }
-
-		public async Task<RelativityCredentials> GetCredentialsAsync(CancellationToken cancellationToken)
-		{
-			try
-			{
-				if (!string.IsNullOrWhiteSpace(_bearerToken))
-				{
-					return new RelativityCredentials(_bearerToken, BaseAddress);
-				}
-
-				Console.WriteLine("Retrieving bearer token...");
-				_bearerToken = await _bearerTokenRetriever.RetrieveTokenAsync(_secretCredentials.ClientId, _secretCredentials.ClientSecret).ConfigureAwait(false);
-
+				_consoleLogger.Info("Authentication provider - Requesting credentials (CACHED)");
 				return new RelativityCredentials(_bearerToken, BaseAddress);
 			}
-			catch( Exception e) 
-			{
-				throw new ApplicationException("Failed to retrieve credentials.", e);
-			}
+
+			_consoleLogger.Info("Retrieving bearer token...");
+			_bearerToken = await _bearerTokenRetriever.RetrieveTokenAsync(BaseAddress, _secretCredentials)
+				.ConfigureAwait(false);
+
+			return new RelativityCredentials(_bearerToken, BaseAddress);
 		}
+		catch (Exception ex)
+		{
+			throw new ApplicationException("Failed to retrieve credentials.", ex);
+		}
+	}
+
+	private static bool HasMissingOAuthParameters(CommonConfiguration common)
+	{
+		return string.IsNullOrWhiteSpace(common?.InstanceUrl) ||
+		       string.IsNullOrWhiteSpace(common.OAuthCredentials?.ClientId) ||
+		       string.IsNullOrWhiteSpace(common.OAuthCredentials?.ClientSecret);
 	}
 }
