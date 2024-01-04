@@ -8,13 +8,13 @@ using Relativity.Transfer.SDK.Samples.Core.Helpers;
 using Relativity.Transfer.SDK.Samples.Core.ProgressHandler;
 using Relativity.Transfer.SDK.Samples.Core.Runner;
 
-namespace Relativity.Transfer.SDK.Samples.Repository;
+namespace Relativity.Transfer.SDK.Samples.Repository.FullPathWorkflow;
 
-[Sample(4, "Upload a directory",
-    "The sample illustrates how to implement a directory upload to a RelativityOne file share.",
-    typeof(UploadDirectory),
-    TransferType.UploadDirectory)]
-internal class UploadDirectory(
+[Sample(3, "Upload a file",
+    "The sample illustrates how to implement a file upload to a RelativityOne file share.",
+    typeof(UploadFile),
+    TransferType.UploadFile)]
+internal class UploadFile(
     IConsoleLogger consoleLogger,
     IPathExtension pathExtension,
     IRelativityAuthenticationProviderFactory relativityAuthenticationProviderFactory,
@@ -25,10 +25,10 @@ internal class UploadDirectory(
     {
         var clientName = configuration.Common.ClientName;
         var jobId = configuration.Common.JobId;
-        var source = new DirectoryPath(configuration.UploadDirectory.Source);
-        var destination = string.IsNullOrWhiteSpace(configuration.UploadDirectory.Destination)
+        var source = new FilePath(configuration.UploadFile.Source);
+        var destination = string.IsNullOrWhiteSpace(configuration.UploadFile.Destination)
             ? pathExtension.GetDefaultRemoteDirectoryPathForUpload(configuration.Common)
-            : new DirectoryPath(configuration.UploadDirectory.Destination);
+            : new DirectoryPath(configuration.UploadFile.Destination);
         var authenticationProvider = relativityAuthenticationProviderFactory.Create(configuration.Common);
         var progressHandler = progressHandlerFactory.Create();
 
@@ -42,7 +42,7 @@ internal class UploadDirectory(
         consoleLogger.PrintCreatingTransfer(jobId, source, destination);
 
         var result = await transferClient
-            .UploadDirectoryAsync(jobId, source, destination, progressHandler, token)
+            .UploadFileAsync(jobId, source, destination, progressHandler, token)
             .ConfigureAwait(false);
 
         consoleLogger.PrintTransferResult(result);

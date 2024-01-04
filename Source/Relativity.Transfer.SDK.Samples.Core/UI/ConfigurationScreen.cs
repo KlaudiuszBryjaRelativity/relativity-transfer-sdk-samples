@@ -42,22 +42,25 @@ internal sealed class ConfigurationScreen(IPathExtension pathExtension) : IConfi
 			case TransferType.UploadDirectory:
 				source = AnsiConsole.Ask("Source directory", configuration.UploadDirectory.Source);
 				destination = AnsiConsole.Ask("Destination directory",
-					GetDefaultUploadDirectoryDestination(configuration, common));
+					GetDefaultUploadDirectoryDestination(common, configuration.UploadDirectory.Destination));
 
 				return Configuration.Configuration.ForUploadDirectory(common,
 					new SourceAndDestinationConfiguration(source, destination));
+
 			case TransferType.UploadFile:
 				source = AnsiConsole.Ask("Source file", configuration.UploadFile.Source);
 				destination = AnsiConsole.Ask("Destination directory", configuration.UploadFile.Destination);
 
 				return Configuration.Configuration.ForUploadFile(common,
 					new SourceAndDestinationConfiguration(source, destination));
+
 			case TransferType.DownloadDirectory:
 				source = AnsiConsole.Ask("Source directory", GetDefaultDownloadDirectorySource(configuration, common));
 				destination = AnsiConsole.Ask("Destination directory", configuration.DownloadDirectory.Destination);
 
 				return Configuration.Configuration.ForDownloadDirectory(common,
 					new SourceAndDestinationConfiguration(source, destination));
+
 			case TransferType.DownloadFile:
 				source = AnsiConsole.Ask("Source file", configuration.DownloadFile.Source);
 				destination = AnsiConsole.Ask("Destination directory", configuration.DownloadFile.Destination);
@@ -83,18 +86,50 @@ internal sealed class ConfigurationScreen(IPathExtension pathExtension) : IConfi
 				return Configuration.Configuration.ForUploadDirectoryByWorkspaceId(common,
 					new SourceAndWorkspaceIdConfiguration(source, workspaceId));
 
+			case TransferType.UploadDirectoryBasedOnExistingJob:
+				// Because of the issue in SpectreConsole, validation needs to be made manually: https://github.com/spectreconsole/spectre.console/issues/1343
+				var firstSource = string.Empty;
+				var secondSource = string.Empty;
+				var isValid = false;
+				while (!isValid)
+				{
+					firstSource = AnsiConsole.Ask("First source directory",
+						configuration.UploadDirectoryBasedOnExistingJob.FirstSource);
+					secondSource = AnsiConsole.Ask("Second source directory",
+						configuration.UploadDirectoryBasedOnExistingJob.SecondSource);
+					isValid = firstSource != secondSource;
+					if (!isValid)
+						AnsiConsole.MarkupLine(
+							"[red]The second source path should be different than the first source path[/]");
+				}
+
+				destination = AnsiConsole.Ask("Destination directory",
+					GetDefaultUploadDirectoryDestination(common,
+						configuration.UploadDirectoryBasedOnExistingJob.Destination));
+
+				return Configuration.Configuration.ForUploadDirectoryBasedOnExistingJob(common,
+					new TwoSourcesAndDestinationConfiguration(firstSource, secondSource, destination));
+
+			case TransferType.DownloadDirectoryBasedOnExistingJob:
+				source = AnsiConsole.Ask("Source directory", configuration.DownloadDirectoryBasedOnExistingJob.Source);
+				var firstDestination = AnsiConsole.Ask("First destination directory [[upload]]",
+					GetDefaultUploadDirectoryDestination(common,
+						configuration.DownloadDirectoryBasedOnExistingJob.FirstDestination));
+				var secondDestination = AnsiConsole.Ask("Second destination directory [[download]]",
+					configuration.DownloadDirectoryBasedOnExistingJob.SecondDestination);
+
+				return Configuration.Configuration.ForDownloadDirectoryBasedOnExistingJob(common,
+					new SourceAndTwoDestinationsConfiguration(source, firstDestination, secondDestination));
+
 			default: throw new ArgumentOutOfRangeException(nameof(sampleAttribute.TransferType));
 		}
 	}
 
-	private string GetDefaultUploadDirectoryDestination(Configuration.Configuration configuration,
-		CommonConfiguration common)
+	private string GetDefaultUploadDirectoryDestination(CommonConfiguration common, string defaultValue)
 	{
-		var destination = configuration.UploadDirectory.Destination;
-
-		return string.IsNullOrWhiteSpace(destination)
+		return string.IsNullOrWhiteSpace(defaultValue)
 			? pathExtension.GetDefaultRemoteDirectoryPathForUploadAsString(common)
-			: destination;
+			: defaultValue;
 	}
 
 	private string GetDefaultDownloadDirectorySource(Configuration.Configuration configuration,

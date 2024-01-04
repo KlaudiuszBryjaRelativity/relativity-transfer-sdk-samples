@@ -9,7 +9,12 @@ using Relativity.Transfer.SDK.Samples.Core.ProgressHandler;
 using Relativity.Transfer.SDK.Samples.Core.Runner;
 using Relativity.Transfer.SDK.Samples.Core.Services;
 using Relativity.Transfer.SDK.Samples.Core.UI;
-using Relativity.Transfer.SDK.Samples.Repository;
+using Relativity.Transfer.SDK.Samples.Repository.FullPathWorkflow;
+using Relativity.Transfer.SDK.Samples.Repository.JobBasedWorkflow;
+using FullPathWorkflowUploadDirectory = Relativity.Transfer.SDK.Samples.Repository.FullPathWorkflow.UploadDirectory;
+using FullPathWorkflowDownloadDirectory = Relativity.Transfer.SDK.Samples.Repository.FullPathWorkflow.DownloadDirectory;
+using JobBasedWorkflowUploadDirectory = Relativity.Transfer.SDK.Samples.Repository.JobBasedWorkflow.UploadDirectory;
+using JobBasedWorkflowDownloadDirectory = Relativity.Transfer.SDK.Samples.Repository.JobBasedWorkflow.DownloadDirectory;
 
 namespace Relativity.Transfer.SDK.Samples.CLI;
 
@@ -40,12 +45,16 @@ internal class Program
 				services.AddTransient<ISample, BearerTokenAuthentication>();
 				services.AddTransient<ISample, SettingUpProgressHandlerAndPrintingSummary>();
 				services.AddTransient<ISample, UploadFile>();
-				services.AddTransient<ISample, UploadDirectory>();
+				services.AddTransient<ISample, FullPathWorkflowUploadDirectory>();
 				services.AddTransient<ISample, UploadDirectoryWithCustomizedRetryPolicy>();
 				services.AddTransient<ISample, UploadDirectoryWithExclusionPolicy>();
 				services.AddTransient<ISample, UploadToFileSharePathBasedOnWorkspaceId>();
 				services.AddTransient<ISample, DownloadFile>();
-				services.AddTransient<ISample, DownloadDirectory>();
+				services.AddTransient<ISample, FullPathWorkflowDownloadDirectory>();
+				services.AddTransient<ISample, JobBasedWorkflowUploadDirectory>();
+				services.AddTransient<ISample, UploadDirectoryBasedOnExistingJob>();
+				services.AddTransient<ISample, JobBasedWorkflowDownloadDirectory>();
+				services.AddTransient<ISample, DownloadDirectoryBasedOnExistingJob>();
 			})
 			.ConfigureLogging((_, cfg) => { cfg.SetMinimumLevel(LogLevel.Warning); })
 			.RunConsoleAsync();

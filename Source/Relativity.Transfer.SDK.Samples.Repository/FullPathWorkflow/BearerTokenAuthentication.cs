@@ -7,7 +7,7 @@ using Relativity.Transfer.SDK.Samples.Core.Configuration;
 using Relativity.Transfer.SDK.Samples.Core.Helpers;
 using Relativity.Transfer.SDK.Samples.Core.Runner;
 
-namespace Relativity.Transfer.SDK.Samples.Repository;
+namespace Relativity.Transfer.SDK.Samples.Repository.FullPathWorkflow;
 
 [Sample(1, "A bearer token authentication",
     "The sample illustrates how to implement a bearer token authentication in RelativityOne.",

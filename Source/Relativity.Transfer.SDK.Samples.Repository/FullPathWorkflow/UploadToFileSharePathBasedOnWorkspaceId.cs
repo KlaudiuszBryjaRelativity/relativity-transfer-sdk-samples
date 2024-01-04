@@ -17,7 +17,7 @@ using Relativity.Transfer.SDK.Samples.Core.ProgressHandler;
 using Relativity.Transfer.SDK.Samples.Core.Runner;
 using Relativity.Transfer.SDK.Samples.Core.UI;
 
-namespace Relativity.Transfer.SDK.Samples.Repository;
+namespace Relativity.Transfer.SDK.Samples.Repository.FullPathWorkflow;
 
 [Sample(5, "A transfer based on a WorkspaceId",
     "The sample illustrates the implementation of a transfer based on a WorkspaceId.",

@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ByteSizeLib;
-using Relativity.Transfer.SDK.Samples.Core.Attributes;
-using Relativity.Transfer.SDK.Samples.Core.DTOs;
 using Relativity.Transfer.SDK.Interfaces.Paths;
 using Relativity.Transfer.SDK.Interfaces.ProgressReporting;
 using Relativity.Transfer.SDK.Interfaces.ProgressReporting.JobStates;
+using Relativity.Transfer.SDK.Samples.Core.Attributes;
+using Relativity.Transfer.SDK.Samples.Core.DTOs;
 using Spectre.Console;
 using Rule = Spectre.Console.Rule;
 using Color = Spectre.Console.Color;
@@ -34,19 +34,19 @@ internal sealed class ConsoleLogger : IConsoleLogger
 	{
 		AnsiConsole.WriteLine();
 		AnsiConsole.MarkupLine($"Creating transfer [green]{jobId}[/]:");
-		AnsiConsole.MarkupLine($"\tFrom: [purple3]{source}[/]");
-		AnsiConsole.MarkupLine($"\tTo: [orange4]{destination}[/]");
-		foreach (var additionalLine in (additionalLines ?? Array.Empty<string>()).Where(x =>
-			         !string.IsNullOrWhiteSpace(x)))
-			AnsiConsole.MarkupLine(additionalLine);
+		if (source != null) AnsiConsole.MarkupLine($"\tFrom: [purple3]{source}[/]");
+		if (destination != null) AnsiConsole.MarkupLine($"\tTo: [orange4]{destination}[/]");
+
+		AddAdditionalLinesIfRequired(additionalLines);
 
 		AnsiConsole.WriteLine();
 	}
 
-	public void PrintTransferResult(TransferJobResult result)
+	public void PrintTransferResult(TransferJobResult result, string headerLine = "Transfer has finished:",
+		bool waitForKeyHit = true)
 	{
 		AnsiConsole.WriteLine();
-		AnsiConsole.MarkupLine("Transfer has finished:");
+		AnsiConsole.MarkupLine(headerLine);
 		AnsiConsole.MarkupLine($" JobId: [green]{result.CorrelationId}[/]");
 		AnsiConsole.MarkupLine(
 			$" Total Bytes: [green]{result.TotalBytes} ({ByteSize.FromBytes(result.TotalBytes)})[/]");
@@ -62,6 +62,8 @@ internal sealed class ConsoleLogger : IConsoleLogger
 		AnsiConsole.WriteLine();
 
 		AddProgressStepsDescription(result);
+
+		if (!waitForKeyHit) return;
 
 		AnsiConsole.Markup("Press any key to continue...");
 		Console.ReadKey();
@@ -108,6 +110,32 @@ internal sealed class ConsoleLogger : IConsoleLogger
 		return selectedFileShare?.IsBackToMainMenuOption ?? true
 			? null
 			: selectedFileShare;
+	}
+
+	public void PrintRegisteringTransferJob(Guid jobId, PathBase source = null, PathBase destination = null,
+		Guid? existingJobId = null)
+	{
+		AnsiConsole.WriteLine();
+		if (source != null)
+			Info(
+				$"[orange4]Registering the transfer job[/] [green]{jobId}[/] [orange4]for the source path[/] [green]{source}[/]");
+		if (destination != null)
+			Info(
+				$"[orange4]Registering the transfer job[/] [green]{jobId}[/] [orange4]for the destination path[/] [green]{destination}[/]");
+		if (existingJobId.HasValue)
+			Info(
+				$"[orange4]Registering the transfer job[/] [green]{jobId}[/] [orange4]with destination taken from the existing transfer job[/] [green]{existingJobId}[/]");
+		AnsiConsole.WriteLine();
+	}
+
+	private static void AddAdditionalLinesIfRequired(string[] additionalLines)
+	{
+		var lines = (additionalLines ?? []).Where(x => !string.IsNullOrWhiteSpace(x)).ToArray();
+		if (lines.Length == 0) return;
+
+		AnsiConsole.WriteLine();
+		foreach (var additionalLine in lines)
+			AnsiConsole.MarkupLine(additionalLine);
 	}
 
 	private static void AddProgressStepsDescription(TransferJobResult result)
