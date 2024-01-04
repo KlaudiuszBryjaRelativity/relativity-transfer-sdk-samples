@@ -1,7 +1,9 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Relativity.Transfer.SDK.Samples.Core.Attributes;
 using Relativity.Transfer.SDK.Samples.Core.Authentication;
 using Relativity.Transfer.SDK.Samples.Core.Configuration;
 using Relativity.Transfer.SDK.Samples.Core.Helpers;
@@ -42,19 +44,23 @@ internal class Program
 				services.AddSingleton(_ => ConfigurationProvider.GetConfiguration());
 
 				// Register samples
-				services.AddTransient<ISample, BearerTokenAuthentication>();
-				services.AddTransient<ISample, SettingUpProgressHandlerAndPrintingSummary>();
-				services.AddTransient<ISample, UploadFile>();
-				services.AddTransient<ISample, FullPathWorkflowUploadDirectory>();
-				services.AddTransient<ISample, UploadDirectoryWithCustomizedRetryPolicy>();
-				services.AddTransient<ISample, UploadDirectoryWithExclusionPolicy>();
-				services.AddTransient<ISample, UploadToFileSharePathBasedOnWorkspaceId>();
-				services.AddTransient<ISample, DownloadFile>();
-				services.AddTransient<ISample, FullPathWorkflowDownloadDirectory>();
-				services.AddTransient<ISample, JobBasedWorkflowUploadDirectory>();
-				services.AddTransient<ISample, UploadDirectoryBasedOnExistingJob>();
-				services.AddTransient<ISample, JobBasedWorkflowDownloadDirectory>();
-				services.AddTransient<ISample, DownloadDirectoryBasedOnExistingJob>();
+				foreach (var attrib in SamplesAttributesProvider.GetSamplesAttributes().Where(x => !x.IsExitOption))
+				{
+					services.AddTransient(typeof(ISample), attrib.SampleType);
+				}
+				//services.AddTransient<ISample, BearerTokenAuthentication>();
+				//services.AddTransient<ISample, SettingUpProgressHandlerAndPrintingSummary>();
+				//services.AddTransient<ISample, UploadFile>();
+				//services.AddTransient<ISample, FullPathWorkflowUploadDirectory>();
+				//services.AddTransient<ISample, UploadDirectoryWithCustomizedRetryPolicy>();
+				//services.AddTransient<ISample, UploadDirectoryWithExclusionPolicy>();
+				//services.AddTransient<ISample, UploadToFileSharePathBasedOnWorkspaceId>();
+				//services.AddTransient<ISample, DownloadFile>();
+				//services.AddTransient<ISample, FullPathWorkflowDownloadDirectory>();
+				//services.AddTransient<ISample, JobBasedWorkflowUploadDirectory>();
+				//services.AddTransient<ISample, UploadDirectoryBasedOnExistingJob>();
+				//services.AddTransient<ISample, JobBasedWorkflowDownloadDirectory>();
+				//services.AddTransient<ISample, DownloadDirectoryBasedOnExistingJob>();
 			})
 			.ConfigureLogging((_, cfg) => { cfg.SetMinimumLevel(LogLevel.Warning); })
 			.RunConsoleAsync();

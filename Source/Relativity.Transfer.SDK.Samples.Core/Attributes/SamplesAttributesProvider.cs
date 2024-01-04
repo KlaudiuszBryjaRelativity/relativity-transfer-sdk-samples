@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 
@@ -8,6 +9,8 @@ internal static class SamplesAttributesProvider
 {
 	public static SampleAttribute[] GetSamplesAttributes()
 	{
+		EnsureAllSamplesAssembliesAreLoaded();
+
 		return AppDomain.CurrentDomain
 			.GetAssemblies()
 			.SelectMany(assembly => assembly.GetTypes())
@@ -17,5 +20,23 @@ internal static class SamplesAttributesProvider
 			.Distinct()
 			.OrderBy(attr => attr.Order)
 			.ToArray();
+	}
+
+	private static void EnsureAllSamplesAssembliesAreLoaded()
+	{
+		var directoryName = Path.GetDirectoryName(typeof(SampleAttribute).Assembly.Location);
+		if (string.IsNullOrWhiteSpace(directoryName))
+			throw new InvalidOperationException("Cannot get directory path of the Core assembly.");
+
+		//foreach (var assemblyPath in Directory.GetFiles(directoryName, "Relativity.Transfer.SDK.Samples.*.dll"))
+		foreach (var assemblyPath in Directory.GetFiles(directoryName, "*.dll"))
+			try
+			{
+				Assembly.LoadFrom(assemblyPath);
+			}
+			catch
+			{
+				//ignore
+			}
 	}
 }

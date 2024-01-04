@@ -2,10 +2,13 @@
 
 ## Introduction
 
-This project showcases a straightforward integration scenario with `TransferSDK`.
+This project showcases a straightforward integration scenario with `Relativity.Transfer.SDK` (a.k.a `TransferSDK`) NuGet package.
 
 #### `TransferSDK` lets you:
-- Upload a single directory or file to the selected destination in Relativity fileshare
+- Upload a single directory or file to the selected destination in RelativityOne fileshare
+- Download a single directory or file from the selected source in RelativityOne fileshare
+- Upload a directory (using an existing job based destination path) to the RelativityOne fileshare
+- Download a directory (using an existing job based source path) from the RelativityOne fileshare
 - Track the overall progress of the transfer
 - Track the progress of individual items that have been transferred, failed, or skipped
 - Get a detailed transfer report
@@ -15,73 +18,95 @@ This project showcases a straightforward integration scenario with `TransferSDK`
 The library supports `.NETStandard 2.0`, which means it is cross-platform. You can run it on Windows or Linux!
 
 ## Samples
+#### Repository structure:
+The repository contains 3 projects:
+- `Relativity.Transfer.SDK.Samples.Core` - contains all the interfaces, models, UI, and helpers used by the `Relativity.Transfer.SDK.Samples.Repository` project.
+- `Relativity.Transfer.SDK.Samples.Repository` - contains all the samples.
+- `Relativity.Transfer.SDK.Samples.CLI` - contains a command-line interface for the `Relativity.Transfer.SDK.Samples.Repository` project. It uses IoC container to create instances of required classes.
+
 #### Examples structure:
-- Each sample is numbered. The number of a sample is included in the file and the class name.
-- All code presenting a particular example is contained only in a single file (if additional classes are needed for the example they are defined as private within the example).
-- Usually, all necessary inputs are taken at the beginning of the example using `ConsoleHelper` class.
-- `ConsoleHelper` prompts a user for input only when the input was not set up before. That means after initial setup some samples can work without prompting the user at all.
+- All code presenting a particular example is contained only in a single file (if additional dependencies are required they are injected by IoC).
+- Usually, all necessary inputs are taken at the beginning of the example using `IConfigurationScreen` implementation.
+- Implementation of `IConfigurationScreen` interface prompts a user for every input, but when value is not provided the default value is used (the default value is shown in bracket alongside with prompt, it can be set via `appsettings.json` file).
 - Sample code contains accurate comments describing the flow.
+- Two types of workflows are supported by samples:
+    - **FullPathWorkflow** - consists of samples which requires a source and destination paths to be provided.
+    - **JobBasedWorkflow** - consists of samples which requires a source path (upload) or destination path (download) to be provided. The other path is taken from an existing job.
 
-
-| Sample name                                        | .Net                                                                                                                                                                                                                                 |
-|----------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Sample1_BearerTokenAuthentication                  | [Sample1_BearerTokenAuthentication](https://github.com/relativitydev/relativity-transfer-sdk-samples/blob/main/Source/Relativity.Transfer.SDK.Sample/Samples/Sample1_BearerTokenAuthentication.cs)                                   |
-| Sample2_SettingUpProgressHandlerAndPrintingSummary | [Sample2_SettingUpProgressHandlerAndPrintingSummary](https://github.com/relativitydev/relativity-transfer-sdk-samples/blob/main/Source/Relativity.Transfer.SDK.Sample/Samples/Sample2_SettingUpProgressHandlerAndPrintingSummary.cs) |
-| Sample3_UploadSingleFile                           | [Sample3_UploadSingleFile](https://github.com/relativitydev/relativity-transfer-sdk-samples/blob/main/Source/Relativity.Transfer.SDK.Sample/Samples/Sample3_UploadSingleFile.cs)                                                     |
-| Sample4_UploadDirectory                            | [Sample4_UploadDirectory](https://github.com/relativitydev/relativity-transfer-sdk-samples/blob/main/Source/Relativity.Transfer.SDK.Sample/Samples/Sample4_UploadDirectory.cs)                                                       |
-| Sample5_UploadDirectoryWithCustomizedRetryPolicy   | [Sample5_UploadDirectoryWithCustomizedRetryPolicy](https://github.com/relativitydev/relativity-transfer-sdk-samples/blob/main/Source/Relativity.Transfer.SDK.Sample/Samples/Sample5_UploadDirectoryWithCustomizedRetryPolicy.cs)     |
-| Sample6_UploadDirectoryWithExclusionPolicy         | [Sample6_UploadDirectoryWithExclusionPolicy](https://github.com/relativitydev/relativity-transfer-sdk-samples/blob/main/Source/Relativity.Transfer.SDK.Sample/Samples/Sample6_UploadDirectoryWithExclusionPolicy.cs)                 |
-| Sample7_UploadToFilesharePathBasedOnWorkspaceId    | [Sample7_UploadToFilesharePathBasedOnWorkspaceId](https://github.com/relativitydev/relativity-transfer-sdk-samples/blob/main/Source/Relativity.Transfer.SDK.Sample/Samples/Sample7_UploadToFilesharePathBasedOnWorkspaceId.cs)       |
-| Sample8_DownloadFile                               | [Sample8_DownloadFile](https://github.com/relativitydev/relativity-transfer-sdk-samples/blob/main/Source/Relativity.Transfer.SDK.Sample/Samples/Sample8_DownloadFile.cs)                                                             |
-| Sample9_DownloadDirectory                          | [Sample9_DownloadDirectory](https://github.com/relativitydev/relativity-transfer-sdk-samples/blob/main/Source/Relativity.Transfer.SDK.Sample/Samples/Sample9_DownloadDirectory.cs)                                                   |
+| Name                                       | Config section                      | .Net                                                                                                                                                                                                                                      |
+|--------------------------------------------|-------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| ___FullPathWorkflow___                     |                                     |                                                                                                                                                                                                                                           |
+| BearerTokenAuthentication                  | UploadFile                          | [BearerTokenAuthentication](https://github.com/relativitydev/relativity-transfer-sdk-samples/blob/main/Source/Relativity.Transfer.SDK.Samples.Repository/FullPathWorkflow/BearerTokenAuthentication.cs)                                   |
+| DownloadDirectory                          | DownloadDirectory                   | [DownloadDirectory](https://github.com/relativitydev/relativity-transfer-sdk-samples/blob/main/Source/Relativity.Transfer.SDK.Samples.Repository/FullPathWorkflow/DownloadDirectory.cs)                                                   |
+| DownloadFile                               | DownloadFile                        | [DownloadFile](https://github.com/relativitydev/relativity-transfer-sdk-samples/blob/main/Source/Relativity.Transfer.SDK.Samples.Repository/FullPathWorkflow/DownloadFile.cs)                                                             |
+| SettingUpProgressHandlerAndPrintingSummary | UploadDirectory                     | [SettingUpProgressHandlerAndPrintingSummary](https://github.com/relativitydev/relativity-transfer-sdk-samples/blob/main/Source/Relativity.Transfer.SDK.Samples.Repository/FullPathWorkflow/SettingUpProgressHandlerAndPrintingSummary.cs) |
+| UploadDirectory                            | UploadDirectory                     | [UploadDirectory](https://github.com/relativitydev/relativity-transfer-sdk-samples/blob/main/Source/Relativity.Transfer.SDK.Samples.Repository/FullPathWorkflow/UploadDirectory.cs)                                                       |
+| UploadDirectoryWithCustomizedRetryPolicy   | UploadDirectory                     | [UploadDirectoryWithCustomizedRetryPolicy](https://github.com/relativitydev/relativity-transfer-sdk-samples/blob/main/Source/Relativity.Transfer.SDK.Samples.Repository/FullPathWorkflow/UploadDirectoryWithCustomizedRetryPolicy.cs)     |
+| UploadDirectoryWithExclusionPolicy         | UploadDirectory                     | [UploadDirectoryWithExclusionPolicy](https://github.com/relativitydev/relativity-transfer-sdk-samples/blob/main/Source/Relativity.Transfer.SDK.Samples.Repository/FullPathWorkflow/UploadDirectoryWithExclusionPolicy.cs)                 |
+| UploadFile                                 | UploadFile                          | [UploadFile](https://github.com/relativitydev/relativity-transfer-sdk-samples/blob/main/Source/Relativity.Transfer.SDK.Samples.Repository/FullPathWorkflow/UploadFile.cs)                                                                 |
+| UploadToFilesharePathBasedOnWorkspaceId    | UploadDirectoryByWorkspaceId        | [UploadToFilesharePathBasedOnWorkspaceId](https://github.com/relativitydev/relativity-transfer-sdk-samples/blob/main/Source/Relativity.Transfer.SDK.Samples.Repository/FullPathWorkflow/UploadToFilesharePathBasedOnWorkspaceId.cs)       |
+| ___JobBasedWorkflow___                     |                                     |                                                                                                                                                                                                                                           |
+| DownloadDirectory                          | DownloadDirectory                   | [DownloadDirectory](https://github.com/relativitydev/relativity-transfer-sdk-samples/blob/main/Source/Relativity.Transfer.SDK.Samples.Repository/JobBasedWorkflow/DownloadDirectory.cs)                                                   |
+| DownloadDirectoryBasedOnExistingJob        | DownloadDirectoryBasedOnExistingJob | [DownloadDirectoryBasedOnExistingJob](https://github.com/relativitydev/relativity-transfer-sdk-samples/blob/main/Source/Relativity.Transfer.SDK.Samples.Repository/JobBasedWorkflow/DownloadDirectoryBasedOnExistingJob.cs)               |
+| UploadDirectory                            | UploadDirectory                     | [UploadDirectory](https://github.com/relativitydev/relativity-transfer-sdk-samples/blob/main/Source/Relativity.Transfer.SDK.Samples.Repository/JobBasedWorkflow/UploadDirectory.cs)                                                       |
+| UploadDirectoryBasedOnExistingJob          | UploadDirectoryBasedOnExistingJob   | [UploadDirectoryBasedOnExistingJob](https://github.com/relativitydev/relativity-transfer-sdk-samples/blob/main/Source/Relativity.Transfer.SDK.Samples.Repository/JobBasedWorkflow/UploadDirectoryBasedOnExistingJob.cs)                   |
 
 ## Running the sample
 
-- Sample is a regular Visual Studio solution (it is recommended to use Visual Studio 2019 or 2022)
-- During the first application start, it will ask for several most needed settings, and also validate some of them by regenerating the client secret. 
-- The settings also can be modified at runtime. They are stored (except the password) in the application's `*.config` file, in the `bin` folder. 
-- Whenever the application is rebuilt, the bin `*.config` file is restored to the values from `App.config` file from the repository.
- - It is advised to manually remove the `obj` folder and rebuild the solution in order to apply `App.config` file changes into the `bin` config file.
-- Directly modifying the `App.config` file keeps these settings between rebuilds.
+- Sample is a regular Visual Studio solution (it is recommended to use Visual Studio >= 2019)
+- The settings also can be modified at runtime. They are stored (except the password) in the application's `appsettings.json` file, in the `bin` folder. 
+- Whenever the application is rebuilt, the bin `appsettings.json` file is restored to the values from `appsettings.json` file from the repository.
+- It is advised to manually remove the `obj` folder and rebuild the solution in order to apply `appsettings.json` file changes into the `bin` config file.
+- Directly modifying the `appsettings.json` file in Visual Studio keeps these settings between rebuilds.
 - The settings to fill up at application start-up:
-    - `ClientName` - This is required to identify the owner of a job. Can be any string.
-    - `RelativityOneInstanceUrl`- The URL to the Relativity instance. Example: `https://contoso.relativity.one`
-    - `RelativityFileshareRootPath` - The root of the Relativity fileshare. Example: `\\files.contoso.pod.r1.kcura.com\contoso`
+    - `Common.ClientName` - This is required to identify the owner of a job. Can be any string.
+    - `Common.InstanceUrl`- The URL to the Relativity instance. Example: `https://contoso.relativity.one`
+    - `Common.FileShareRoot` - The root of the Relativity fileshare. Example: `\\files.contoso.pod.r1.kcura.com\contoso`
         - Note: This value can be taken from Relativity. Find the `Servers` tab, filter it by `Fileshare`, search for the specified one, and copy its `UNC` path value **without** the `\Files\` suffix.
-    - `FileshareRelativeDestinationPath` - The location where the files are transferred relative to the root of the fileshare.
-        - **Note**: `<transferJobId>` folder is created in provided location.
+        - **Note**: It is crucial to remember that backslash `\` characters should be escaped using a double backslash `\\` (this is required by json file to properly deserialize a path).
+    - `Common.FileShareRelativePath` - The location where the files are transferred relative to the root of the fileshare.
+        - **Note**: `<transfer job id>` folder is created in provided location.
         - **Note**: Provided path can not have `\` at the beginning.
         - The path must be rooted in one of the core folders that reside on the fileshare (like Files, Temp, etc.)
-        - Transfer results can be observed in `RelativityOne Staging Explorer`.
-    - `DefaultSourceFilePath`.
-        - The application will use this value when an empty path is provided.
-    - `DefaultSourceDirectoryPath`.
-        - The application will use this value when an empty path is provided.
-    - `DownloadDirectory`.
-      - The application will download the data to the specified location on local machine.
-    - `ClientLogin`.
-    - `ClentOauth2Id` - Relativity OAuthClient id, see `Authentication` section for more info.
-    - `ClientPassword`.
-        - The password is not stored in the `App.config` file by default
-        - To store the password the `App.config` must be directly modified, under the `ClientPassword` section.
-- There are 3 options to edit the above settings:
-    - during application runtime via the provided console interface
-    - by modifying the application *.config file in the bin folder.
-    - by modifying `App.config` file and rebuilding the application (and cleaning the `obj` folder)
-- To be prompted for the settings every time the operation is made, the required settings in the config should be empty.
+        - **Note**: It is crucial to remember that backslash `\` characters should be escaped using a double backslash `\\` (this is required by json file to properly deserialize a path).
+    - `Common.OAuthCredentials` - The OAuth2 secret ID and secret used to authenticate in RelativityOne (Find the `OAuth2 Client` tab, then find the user and copy `ClientId` and `ClientSecret` fileds).
+- The sttings specified for a sample are commented in `appsettings.json` file. Which section is responsible for which sample is described in the table above.
 
 ## Authentication
-- First, the [transfer client object](https://github.com/relativitydev/relativity-transfer-sdk-samples/blob/main/Source/Relativity.Transfer.SDK.Sample/Samples/Sample1_BearerTokenAuthentication.cs#L36-L39) has to be created, which is used to manage transfers.
-- TransferSKD uses a bearer token in order to authenticate the transfer.
-- To pass the token, the `IRelativityAuthenticationProvider` [object](https://github.com/relativitydev/relativity-transfer-sdk-samples/blob/main/Source/Relativity.Transfer.SDK.Sample/Samples/Sample1_BearerTokenAuthentication.cs#L54) should be [registered](https://github.com/relativitydev/relativity-transfer-sdk-samples/blob/main/Source/Relativity.Transfer.SDK.Sample/Samples/Sample1_BearerTokenAuthentication.cs#L37). 
-- In order to get the token, [Bearer token authentication](https://platform.relativity.com/RelativityOne/Content/REST_API/REST_API_authentication.htm#_Bearer_token_authentication) is used, which requires user OAuth2 client id and client secret. (see [Sample1](https://github.com/relativitydev/relativity-transfer-sdk-samples/blob/main/Source/Relativity.Transfer.SDK.Sample/Samples/Sample1_BearerTokenAuthentication.cs#L60), [BearerTokenRetriever](https://github.com/relativitydev/relativity-transfer-sdk-samples/blob/main/Source/Relativity.Transfer.SDK.Sample/Authentication/BearerTokenRetriever.cs))
-    - The token can become obsolete after some time. It's the `AuthenticationProvider` responsibility to always return a valid token.
-- Client id and secret can be read from the Relativity instance. It is under the `Oauth2 Client` tab. Appropriate users can be identified by the `Context User` column.
+- First, the transfer client object has to be created, which is used to manage transfers:
+```cs
+// FullPathWorkflow
+var transferClient = TransferClientBuilder.FullPathWorkflow
+    .WithAuthentication(authenticationProvider)
+    .WithClientName(clientName)
+    .Build();
+
+// or JobBasedWorkflow
+var transferClient = TransferClientBuilder.FullPathWorkflow
+    .WithAuthentication(authenticationProvider)
+    .WithClientName(clientName)
+    .Build();
+```
+
+- `TransferSKD` uses a bearer token in order to authenticate the transfer.
+- To pass the token, the `Relativity.Transfer.SDK.Interfaces.Authentication.IRelativityAuthenticationProvider` must be implemented and an instance should be passed to the clint. Sample implementation of authentication provider is [here](https://github.com/relativitydev/relativity-transfer-sdk-samples/blob/main/Source/Relativity.Transfer.SDK.Samples.Core/Authentication/RelativityAuthenticationProvider.cs). 
+- In order to get the token, [Bearer token authentication](https://platform.relativity.com/RelativityOne/Content/REST_API/REST_API_authentication.htm#_Bearer_token_authentication) is used, which requires user OAuth2 client id and client secret. (see [SampleBearerTokenRetriver](https://github.com/relativitydev/relativity-transfer-sdk-samples/blob/main/Source/Relativity.Transfer.SDK.Samples.Core/Authentication/BearerTokenRetriever.cs))
+    - The token can become obsolete after some time. It's the `IRelativityAuthenticationProvider` responsibility to always return a valid token.
+- Client id and secret can be read from the RelativityOne instance. It is under the `Oauth2 Client` tab. Appropriate users can be identified by the `Context User` column.
     - The secret is valid for only a limited period of time (8 hours by default), so it is advised to regenerate it before copying.
 - It is strongly recommended to implement your own authentication mechanism which best suits your needs. Here are some helpful links: 
     - [Relativity REST API authentication](https://platform.relativity.com/RelativityOne/Content/REST_API/REST_API_authentication.htm)
     - [OAuth2 clients](https://platform.relativity.com/10.3/Content/Authentication/OAuth2_clients.htm#_OAuth2_Client_Manager_REST_service)
     - [Authentication](https://help.relativity.com/RelativityOne/Content/Relativity/Authentication/Authentication.htm)
+
+## Contributing
+
+- We welcome contributions!
+- To add a new sample, create a new class in the appropriate workflow folder in `Relativity.Transfer.SDK.Samples.Repository` project (or create a new folder if a new workflow is used).
+- The sample calss should implement [Relativity.Transfer.SDK.Samples.Core.Runner.ISample](https://github.com/relativitydev/relativity-transfer-sdk-samples/blob/main/Source/Relativity.Transfer.SDK.Samples.Core/Runner/ISample.cs) interface.
+- Add [Relativity.Transfer.SDK.Samples.Core.Attributes.SampleAttribute](https://github.com/relativitydev/relativity-transfer-sdk-samples/blob/main/Source/Relativity.Transfer.SDK.Samples.Core/Attributes/SampleAttribute.cs) to a class which describes the sample. The most important parameter is `TransferType` which specifies which configuration section is used to provide default parameters.
+- Whatever you need, should be requested by `.ctor(...)` because the sample is created by IoC container.
+- Your sample should be visible in the CLI application.
 
 ## Exceptions 
 Some exceptions that can be encountered when using samples and their potential root causes
