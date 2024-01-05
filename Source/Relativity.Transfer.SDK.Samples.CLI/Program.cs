@@ -48,19 +48,6 @@ internal class Program
 				{
 					services.AddTransient(typeof(ISample), attrib.SampleType);
 				}
-				//services.AddTransient<ISample, BearerTokenAuthentication>();
-				//services.AddTransient<ISample, SettingUpProgressHandlerAndPrintingSummary>();
-				//services.AddTransient<ISample, UploadFile>();
-				//services.AddTransient<ISample, FullPathWorkflowUploadDirectory>();
-				//services.AddTransient<ISample, UploadDirectoryWithCustomizedRetryPolicy>();
-				//services.AddTransient<ISample, UploadDirectoryWithExclusionPolicy>();
-				//services.AddTransient<ISample, UploadToFileSharePathBasedOnWorkspaceId>();
-				//services.AddTransient<ISample, DownloadFile>();
-				//services.AddTransient<ISample, FullPathWorkflowDownloadDirectory>();
-				//services.AddTransient<ISample, JobBasedWorkflowUploadDirectory>();
-				//services.AddTransient<ISample, UploadDirectoryBasedOnExistingJob>();
-				//services.AddTransient<ISample, JobBasedWorkflowDownloadDirectory>();
-				//services.AddTransient<ISample, DownloadDirectoryBasedOnExistingJob>();
 			})
 			.ConfigureLogging((_, cfg) => { cfg.SetMinimumLevel(LogLevel.Warning); })
 			.RunConsoleAsync();

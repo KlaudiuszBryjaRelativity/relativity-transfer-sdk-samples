@@ -28,7 +28,6 @@ internal static class SamplesAttributesProvider
 		if (string.IsNullOrWhiteSpace(directoryName))
 			throw new InvalidOperationException("Cannot get directory path of the Core assembly.");
 
-		//foreach (var assemblyPath in Directory.GetFiles(directoryName, "Relativity.Transfer.SDK.Samples.*.dll"))
 		foreach (var assemblyPath in Directory.GetFiles(directoryName, "*.dll"))
 			try
 			{
