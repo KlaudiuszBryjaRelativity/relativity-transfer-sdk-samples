@@ -25,7 +25,7 @@ The repository contains 3 projects:
 - `Relativity.Transfer.SDK.Samples.CLI` - contains a command-line interface for the `Relativity.Transfer.SDK.Samples.Repository` project. It uses IoC container to create instances of required classes.
 
 #### Examples structure:
-- Code presenting a particular example is contained in a single file (see the table below to match a sample with a code file). If additional dependencies are required they are injected by IoC [here the rough location, when this IoC is defined].
+- Code presenting a particular example is contained in a single file (see the table below to match a sample with a code file). If additional dependencies are required they are [injected by IoC](https://github.com/relativitydev/relativity-transfer-sdk-samples/blob/main/Source/Relativity.Transfer.SDK.Samples.CLI/Program.cs).
 - Usually, all necessary inputs are taken at the beginning of the example using `IConfigurationScreen` implementation.
 - Implementation of `IConfigurationScreen` interface prompts a user for every input, but when value is not provided the default value is used (the default value is shown in bracket alongside with prompt, it can be set via `appsettings.json` file).
 - Sample code contains accurate comments describing the flow.
