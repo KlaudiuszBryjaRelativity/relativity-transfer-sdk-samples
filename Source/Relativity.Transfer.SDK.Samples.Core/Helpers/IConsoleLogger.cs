@@ -12,9 +12,10 @@ internal interface IConsoleLogger
 {
 	Task PrintExitMessageAsync();
 	void PrintCreatingTransfer(Guid jobId, PathBase source, PathBase destination, params string[] additionalLines);
-	void PrintTransferResult(TransferJobResult result);
+	void PrintTransferResult(TransferJobResult result, string headerLine = "Transfer has finished:", bool waitForKeyHit = true);
 	void Info(string msg);
 	void PrintError(Exception exception);
 	SampleAttribute PrintMainMenu();
 	FileShareInfo PrintFileShareInfosMenu(IEnumerable<FileShareInfo> fileShareInfos);
+	void PrintRegisteringTransferJob(Guid jobId, PathBase source = null, PathBase destination = null, Guid? existingJobId = null);
 }

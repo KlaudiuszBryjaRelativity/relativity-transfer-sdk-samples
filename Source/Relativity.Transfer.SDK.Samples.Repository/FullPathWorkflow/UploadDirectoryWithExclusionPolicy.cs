@@ -14,7 +14,7 @@ using Relativity.Transfer.SDK.Samples.Core.Helpers;
 using Relativity.Transfer.SDK.Samples.Core.ProgressHandler;
 using Relativity.Transfer.SDK.Samples.Core.Runner;
 
-namespace Relativity.Transfer.SDK.Samples.Repository;
+namespace Relativity.Transfer.SDK.Samples.Repository.FullPathWorkflow;
 
 [Sample(6, "An exclusion policy",
     "The sample illustrates the implementation of an exclusion policy.",

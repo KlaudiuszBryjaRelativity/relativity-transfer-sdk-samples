@@ -14,7 +14,7 @@ using Relativity.Transfer.SDK.Samples.Core.Configuration;
 using Relativity.Transfer.SDK.Samples.Core.Helpers;
 using Relativity.Transfer.SDK.Samples.Core.Runner;
 
-namespace Relativity.Transfer.SDK.Samples.Repository;
+namespace Relativity.Transfer.SDK.Samples.Repository.FullPathWorkflow;
 
 [Sample(2, "A progress handler",
     "The sample illustrates how to implement a progress handler (statistics and events for files).",

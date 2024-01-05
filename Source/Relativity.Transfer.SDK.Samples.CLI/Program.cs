@@ -1,7 +1,9 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Relativity.Transfer.SDK.Samples.Core.Attributes;
 using Relativity.Transfer.SDK.Samples.Core.Authentication;
 using Relativity.Transfer.SDK.Samples.Core.Configuration;
 using Relativity.Transfer.SDK.Samples.Core.Helpers;
@@ -9,7 +11,12 @@ using Relativity.Transfer.SDK.Samples.Core.ProgressHandler;
 using Relativity.Transfer.SDK.Samples.Core.Runner;
 using Relativity.Transfer.SDK.Samples.Core.Services;
 using Relativity.Transfer.SDK.Samples.Core.UI;
-using Relativity.Transfer.SDK.Samples.Repository;
+using Relativity.Transfer.SDK.Samples.Repository.FullPathWorkflow;
+using Relativity.Transfer.SDK.Samples.Repository.JobBasedWorkflow;
+using FullPathWorkflowUploadDirectory = Relativity.Transfer.SDK.Samples.Repository.FullPathWorkflow.UploadDirectory;
+using FullPathWorkflowDownloadDirectory = Relativity.Transfer.SDK.Samples.Repository.FullPathWorkflow.DownloadDirectory;
+using JobBasedWorkflowUploadDirectory = Relativity.Transfer.SDK.Samples.Repository.JobBasedWorkflow.UploadDirectory;
+using JobBasedWorkflowDownloadDirectory = Relativity.Transfer.SDK.Samples.Repository.JobBasedWorkflow.DownloadDirectory;
 
 namespace Relativity.Transfer.SDK.Samples.CLI;
 
@@ -37,15 +44,10 @@ internal class Program
 				services.AddSingleton(_ => ConfigurationProvider.GetConfiguration());
 
 				// Register samples
-				services.AddTransient<ISample, BearerTokenAuthentication>();
-				services.AddTransient<ISample, SettingUpProgressHandlerAndPrintingSummary>();
-				services.AddTransient<ISample, UploadFile>();
-				services.AddTransient<ISample, UploadDirectory>();
-				services.AddTransient<ISample, UploadDirectoryWithCustomizedRetryPolicy>();
-				services.AddTransient<ISample, UploadDirectoryWithExclusionPolicy>();
-				services.AddTransient<ISample, UploadToFileSharePathBasedOnWorkspaceId>();
-				services.AddTransient<ISample, DownloadFile>();
-				services.AddTransient<ISample, DownloadDirectory>();
+				foreach (var attrib in SamplesAttributesProvider.GetSamplesAttributes().Where(x => !x.IsExitOption))
+				{
+					services.AddTransient(typeof(ISample), attrib.SampleType);
+				}
 			})
 			.ConfigureLogging((_, cfg) => { cfg.SetMinimumLevel(LogLevel.Warning); })
 			.RunConsoleAsync();

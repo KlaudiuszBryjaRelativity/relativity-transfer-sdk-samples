@@ -8,13 +8,13 @@ using Relativity.Transfer.SDK.Samples.Core.Helpers;
 using Relativity.Transfer.SDK.Samples.Core.ProgressHandler;
 using Relativity.Transfer.SDK.Samples.Core.Runner;
 
-namespace Relativity.Transfer.SDK.Samples.Repository;
+namespace Relativity.Transfer.SDK.Samples.Repository.FullPathWorkflow;
 
-[Sample(8, "Download a file",
-    "The sample illustrates how to implement a file download from a RelativityOne file share.",
-    typeof(DownloadFile),
-    TransferType.DownloadFile)]
-internal class DownloadFile(
+[Sample(4, "Upload a directory",
+    "The sample illustrates how to implement a directory upload to a RelativityOne file share.",
+    typeof(UploadDirectory),
+    TransferType.UploadDirectory)]
+internal class UploadDirectory(
     IConsoleLogger consoleLogger,
     IPathExtension pathExtension,
     IRelativityAuthenticationProviderFactory relativityAuthenticationProviderFactory,
@@ -25,8 +25,10 @@ internal class DownloadFile(
     {
         var clientName = configuration.Common.ClientName;
         var jobId = configuration.Common.JobId;
-        var source = new FilePath(configuration.DownloadFile.Source);
-        var destination = pathExtension.EnsureLocalDirectory(configuration.DownloadFile.Destination);
+        var source = new DirectoryPath(configuration.UploadDirectory.Source);
+        var destination = string.IsNullOrWhiteSpace(configuration.UploadDirectory.Destination)
+            ? pathExtension.GetDefaultRemoteDirectoryPathForUpload(configuration.Common)
+            : new DirectoryPath(configuration.UploadDirectory.Destination);
         var authenticationProvider = relativityAuthenticationProviderFactory.Create(configuration.Common);
         var progressHandler = progressHandlerFactory.Create();
 
@@ -40,7 +42,7 @@ internal class DownloadFile(
         consoleLogger.PrintCreatingTransfer(jobId, source, destination);
 
         var result = await transferClient
-            .DownloadFileAsync(jobId, source, destination, progressHandler, token)
+            .UploadDirectoryAsync(jobId, source, destination, progressHandler, token)
             .ConfigureAwait(false);
 
         consoleLogger.PrintTransferResult(result);
