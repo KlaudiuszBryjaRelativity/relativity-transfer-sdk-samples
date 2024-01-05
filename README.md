@@ -70,7 +70,7 @@ The repository contains 3 projects:
         - The path must be rooted in one of the core folders that reside on the fileshare (like Files, Temp, etc.)
         - **Note**: It is crucial to remember that backslash `\` characters should be escaped using a double backslash `\\` (this is required by json file to properly deserialize a path).
     - `Common.OAuthCredentials` - The OAuth2 secret ID and secret used to authenticate in RelativityOne (Find the `OAuth2 Client` tab, then find the user and copy `ClientId` and `ClientSecret` fileds).
-- The sttings specified for a sample are commented in `appsettings.json` file. Which section is responsible for which sample is described in the table above.
+- The settings specified for a sample are commented in `appsettings.json` file. Which section is responsible for which sample is described in the table above.
 
 ## Authentication
 - First, the transfer client object has to be created, which is used to manage transfers:
