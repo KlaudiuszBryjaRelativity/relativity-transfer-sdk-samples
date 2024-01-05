@@ -89,7 +89,7 @@ var transferClient = TransferClientBuilder.FullPathWorkflow
 ```
 
 - `TransferSKD` uses a bearer token in order to authenticate the transfer.
-- To pass the token, the `Relativity.Transfer.SDK.Interfaces.Authentication.IRelativityAuthenticationProvider` must be implemented and an instance should be passed to the clint. Sample implementation of authentication provider is [here](https://github.com/relativitydev/relativity-transfer-sdk-samples/blob/main/Source/Relativity.Transfer.SDK.Samples.Core/Authentication/RelativityAuthenticationProvider.cs). 
+- To pass the token, the `Relativity.Transfer.SDK.Interfaces.Authentication.IRelativityAuthenticationProvider` must be implemented and an instance should be passed to the client. Sample implementation of authentication provider is [here](https://github.com/relativitydev/relativity-transfer-sdk-samples/blob/main/Source/Relativity.Transfer.SDK.Samples.Core/Authentication/RelativityAuthenticationProvider.cs). 
 - In order to get the token, [Bearer token authentication](https://platform.relativity.com/RelativityOne/Content/REST_API/REST_API_authentication.htm#_Bearer_token_authentication) is used, which requires user's OAuth2 client id and client's secret. (see [SampleBearerTokenRetriver](https://github.com/relativitydev/relativity-transfer-sdk-samples/blob/main/Source/Relativity.Transfer.SDK.Samples.Core/Authentication/BearerTokenRetriever.cs))
     - The token can become obsolete after some time. It's the `IRelativityAuthenticationProvider` responsibility to always return a valid token.
 - Client id and secret can be read from the RelativityOne instance. It is under the `Oauth2 Client` tab. Appropriate users can be identified by the `Context User` column.
