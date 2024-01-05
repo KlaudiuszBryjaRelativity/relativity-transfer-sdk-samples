@@ -1,0 +1,88 @@
+﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
+using Relativity.Transfer.SDK.Interfaces.Authentication;
+using Relativity.Transfer.SDK.Interfaces.Paths;
+using Relativity.Transfer.SDK.Samples.Core.Attributes;
+using Relativity.Transfer.SDK.Samples.Core.Authentication;
+using Relativity.Transfer.SDK.Samples.Core.Configuration;
+using Relativity.Transfer.SDK.Samples.Core.Helpers;
+using Relativity.Transfer.SDK.Samples.Core.ProgressHandler;
+using Relativity.Transfer.SDK.Samples.Core.Runner;
+
+namespace Relativity.Transfer.SDK.Samples.Repository.JobBasedWorkflow;
+
+[Sample(13, "Download a directory (using the job based workflow and based on an existing job)",
+	"The sample illustrates how to implement a directory download (using the job based workflow and a source path based on an existing job) from a RelativityOne file share.",
+	typeof(DownloadDirectoryBasedOnExistingJob),
+	TransferType.DownloadDirectoryBasedOnExistingJob)]
+internal class DownloadDirectoryBasedOnExistingJob(
+	IConsoleLogger consoleLogger,
+	IPathExtension pathExtension,
+	IRelativityAuthenticationProviderFactory relativityAuthenticationProviderFactory,
+	IProgressHandlerFactory progressHandlerFactory) : ISample
+{
+	public async Task ExecuteAsync(Configuration configuration, CancellationToken token)
+	{
+		var clientName = configuration.Common.ClientName;
+		var uploadJobId = configuration.Common.JobId;
+		var uploadSource = new DirectoryPath(configuration.DownloadDirectoryBasedOnExistingJob.Source);
+		var uploadDestination =
+			string.IsNullOrWhiteSpace(configuration.DownloadDirectoryBasedOnExistingJob.FirstDestination)
+				? pathExtension.GetDefaultRemoteDirectoryPathForUpload(configuration.Common)
+				: new DirectoryPath(configuration.DownloadDirectoryBasedOnExistingJob.FirstDestination);
+		var authenticationProvider = relativityAuthenticationProviderFactory.Create(configuration.Common);
+		var progressHandler = progressHandlerFactory.Create();
+
+		// The builder follows the Fluent convention, and more options will be added in the future. The only required component (besides the client name)
+		// is the authentication provider - a provided one that utilizes an OAuth-based approach has been provided, but the custom implementation can be created.
+		// This sample creates a full path workflow and uploads a directory, then a download transfer job is registered based on the existing upload job (a source path based on this upload).
+		var transferFullPathClient = TransferClientBuilder.FullPathWorkflow
+			.WithAuthentication(authenticationProvider)
+			.WithClientName(clientName)
+			.Build();
+
+		consoleLogger.PrintCreatingTransfer(uploadJobId, uploadSource, uploadDestination);
+
+		var uploadResult = await transferFullPathClient
+			.UploadDirectoryAsync(uploadJobId, uploadSource, uploadDestination, progressHandler, token)
+			.ConfigureAwait(false);
+
+		consoleLogger.PrintTransferResult(uploadResult, "Upload transfer has finished:", false);
+
+		// Based on the recently finished upload job, create a new download job (a source path based on this upload).
+		var downloadJobId = Guid.NewGuid();
+		var downloadDestination =
+			pathExtension.EnsureLocalDirectory(configuration.DownloadDirectoryBasedOnExistingJob.SecondDestination);
+
+		await RegisterDownloadJobFromExistingJobAsync(authenticationProvider, downloadJobId, uploadJobId)
+			.ConfigureAwait(false);
+
+		// build Transfer SDK client supporting job based workflow
+		var transferJobClient = TransferClientBuilder.JobBasedWorkflow
+			.WithAuthentication(authenticationProvider)
+			.WithClientName(clientName)
+			.Build();
+
+		consoleLogger.PrintCreatingTransfer(downloadJobId, uploadSource, downloadDestination);
+
+		var downloadResult = await transferJobClient
+			.DownloadDirectoryAsync(downloadJobId, downloadDestination, progressHandler, token)
+			.ConfigureAwait(false);
+
+		consoleLogger.PrintTransferResult(downloadResult, "Download transfer has finished:");
+	}
+
+	/// <summary>
+	///     An existing job id can be provided to set up a source path based on the existing job.
+	/// </summary>
+	private async Task RegisterDownloadJobFromExistingJobAsync(IRelativityAuthenticationProvider authenticationProvider,
+		Guid jobId, Guid existingJobId)
+	{
+		consoleLogger.PrintRegisteringTransferJob(jobId, existingJobId: existingJobId);
+
+		var jobBuilder = new TransferJobBuilder(authenticationProvider);
+		await jobBuilder.FromExistingJob(existingJobId).CreateDownloadJobAsync(jobId)
+			.ConfigureAwait(false);
+	}
+}

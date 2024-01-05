@@ -3,12 +3,16 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.2.32630.192
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Relativity.Transfer.SDK.Sample", "Relativity.Transfer.SDK.Sample\Relativity.Transfer.SDK.Sample.csproj", "{8BDDE4DF-7F16-45F7-94F6-4B030B3F5396}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Relativity.Transfer.SDK.Samples.CLI", "Relativity.Transfer.SDK.Samples.CLI\Relativity.Transfer.SDK.Samples.CLI.csproj", "{8BDDE4DF-7F16-45F7-94F6-4B030B3F5396}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionItems", "{2F76655B-574B-463F-9707-CA41ECC39AAA}"
 	ProjectSection(SolutionItems) = preProject
 		..\README.md = ..\README.md
 	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Relativity.Transfer.SDK.Samples.Core", "Relativity.Transfer.SDK.Samples.Core\Relativity.Transfer.SDK.Samples.Core.csproj", "{1B429E83-AE69-4321-A512-81872B136FE8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Relativity.Transfer.SDK.Samples.Repository", "Relativity.Transfer.SDK.Samples.Repository\Relativity.Transfer.SDK.Samples.Repository.csproj", "{5C68874B-86DC-4F40-AAEE-5ABCE07F5100}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -20,6 +24,14 @@ Global
 		{8BDDE4DF-7F16-45F7-94F6-4B030B3F5396}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8BDDE4DF-7F16-45F7-94F6-4B030B3F5396}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8BDDE4DF-7F16-45F7-94F6-4B030B3F5396}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1B429E83-AE69-4321-A512-81872B136FE8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1B429E83-AE69-4321-A512-81872B136FE8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1B429E83-AE69-4321-A512-81872B136FE8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1B429E83-AE69-4321-A512-81872B136FE8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5C68874B-86DC-4F40-AAEE-5ABCE07F5100}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5C68874B-86DC-4F40-AAEE-5ABCE07F5100}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5C68874B-86DC-4F40-AAEE-5ABCE07F5100}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5C68874B-86DC-4F40-AAEE-5ABCE07F5100}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
