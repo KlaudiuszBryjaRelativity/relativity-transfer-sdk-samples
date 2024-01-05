@@ -82,7 +82,7 @@ var transferClient = TransferClientBuilder.FullPathWorkflow
     .Build();
 
 // or JobBasedWorkflow
-var transferClient = TransferClientBuilder.FullPathWorkflow
+var transferClient = TransferClientBuilder.JobBasedWorkflow
     .WithAuthentication(authenticationProvider)
     .WithClientName(clientName)
     .Build();
