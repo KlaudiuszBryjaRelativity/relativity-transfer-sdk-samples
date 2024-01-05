@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>netstandard2.0</TargetFramework>
+		<LangVersion>latest</LangVersion>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\Relativity.Transfer.SDK.Samples.Core\Relativity.Transfer.SDK.Samples.Core.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Compile Include="..\Relativity.Transfer.SDK.Samples.Core\Internal\IsExternalInit.cs" Link="Internal\IsExternalInit.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+			<_Parameter1>Relativity.Transfer.SDK.Samples.CLI</_Parameter1>
+		</AssemblyAttribute>
+	</ItemGroup>
+
+</Project>
