@@ -6,23 +6,32 @@ using Relativity.Transfer.SDK.Samples.Core.Runner;
 
 namespace Relativity.Transfer.SDK.Samples.Core.UI;
 
-internal sealed class MainMenu(ISampleRunner sampleRunner, IConsoleLogger consoleLogger) : IMainMenu
+internal sealed class MainMenu : IMainMenu
 {
+	private readonly ISampleRunner _sampleRunner;
+	private readonly IConsoleLogger _consoleLogger;
+
+	public MainMenu(ISampleRunner sampleRunner, IConsoleLogger consoleLogger)
+	{
+		_sampleRunner = sampleRunner;
+		_consoleLogger = consoleLogger;
+	}
+
 	public async Task ShowAsync(CancellationToken token, Func<Task> postScreenAction = null)
 	{
 		while (!token.IsCancellationRequested)
 		{
-			var selectedAttribute = consoleLogger.PrintMainMenu();
+			var selectedAttribute = _consoleLogger.PrintMainMenu();
 			if (selectedAttribute == null) break;
 
 			// Run sample
 			try
 			{
-				await sampleRunner.ExecuteAsync(selectedAttribute, token);
+				await _sampleRunner.ExecuteAsync(selectedAttribute, token);
 			}
 			catch (Exception ex)
 			{
-				consoleLogger.PrintError(ex);
+				_consoleLogger.PrintError(ex);
 			}
 		}
 

@@ -20,14 +20,25 @@ namespace Relativity.Transfer.SDK.Samples.Repository.FullPathWorkflow;
     "The sample illustrates the implementation of an exclusion policy.",
     typeof(UploadDirectoryWithExclusionPolicy),
     TransferType.UploadDirectory)]
-internal class UploadDirectoryWithExclusionPolicy(
-    IConsoleLogger consoleLogger,
-    IPathExtension pathExtension,
-    IRelativityAuthenticationProviderFactory relativityAuthenticationProviderFactory,
-    IProgressHandlerFactory progressHandlerFactory)
-    : ISample
+internal class UploadDirectoryWithExclusionPolicy : ISample
 {
-    public async Task ExecuteAsync(Configuration configuration, CancellationToken token)
+	private readonly IConsoleLogger _consoleLogger;
+	private readonly IPathExtension _pathExtension;
+	private readonly IRelativityAuthenticationProviderFactory _relativityAuthenticationProviderFactory;
+	private readonly IProgressHandlerFactory _progressHandlerFactory;
+
+	public UploadDirectoryWithExclusionPolicy(IConsoleLogger consoleLogger,
+		IPathExtension pathExtension,
+		IRelativityAuthenticationProviderFactory relativityAuthenticationProviderFactory,
+		IProgressHandlerFactory progressHandlerFactory)
+	{
+		_consoleLogger = consoleLogger;
+		_pathExtension = pathExtension;
+		_relativityAuthenticationProviderFactory = relativityAuthenticationProviderFactory;
+		_progressHandlerFactory = progressHandlerFactory;
+	}
+
+	public async Task ExecuteAsync(Configuration configuration, CancellationToken token)
     {
         var clientName = configuration.Common.ClientName;
         var jobId = configuration.Common.JobId;
@@ -36,10 +47,10 @@ internal class UploadDirectoryWithExclusionPolicy(
                 "file5.txt", "file6.xml")
             : new DirectoryPath(configuration.UploadDirectory.Source);
         var destination = string.IsNullOrWhiteSpace(configuration.UploadDirectory.Destination)
-            ? pathExtension.GetDefaultRemoteDirectoryPathForUpload(configuration.Common)
+            ? _pathExtension.GetDefaultRemoteDirectoryPathForUpload(configuration.Common)
             : new DirectoryPath(configuration.UploadDirectory.Destination);
-        var authenticationProvider = relativityAuthenticationProviderFactory.Create(configuration.Common);
-        var progressHandler = progressHandlerFactory.Create();
+        var authenticationProvider = _relativityAuthenticationProviderFactory.Create(configuration.Common);
+        var progressHandler = _progressHandlerFactory.Create();
 
         // The builder follows the Fluent convention, and more options will be added in the future. The only required component (besides the client name)
         // is the authentication provider - a provided one that utilizes an OAuth-based approach has been provided, but the custom implementation can be created.
@@ -52,32 +63,37 @@ internal class UploadDirectoryWithExclusionPolicy(
         // The exclusion policy in that case accepts only files with .xls, .doc, and .txt extensions.
         var fileExclusionPolicyOptions = new UploadDirectoryOptions
         {
-            ExclusionPolicy = new AcceptExtensionExclusionPolicy(consoleLogger, new[] { ".xls", ".doc", ".txt" })
+            ExclusionPolicy = new AcceptExtensionExclusionPolicy(_consoleLogger, new[] { ".xls", ".doc", ".txt" })
         };
 
-        consoleLogger.PrintCreatingTransfer(jobId, source, destination);
+        _consoleLogger.PrintCreatingTransfer(jobId, source, destination);
 
         var result = await transferClient
             .UploadDirectoryAsync(jobId, source, destination, fileExclusionPolicyOptions, progressHandler, token)
             .ConfigureAwait(false);
 
-        consoleLogger.PrintTransferResult(result);
+        _consoleLogger.PrintTransferResult(result);
     }
 
     // Creates data that contains files which should be excluded by the exclusion policy.
     private DirectoryPath CreateTemporaryDirectoryWithFiles(string directoryName, params string[] fileNames)
     {
-        return pathExtension.CreateDirectoryWithFiles(directoryName, fileNames);
+        return _pathExtension.CreateDirectoryWithFiles(directoryName, fileNames);
     }
 
     // An exclusion policy that accepts only files with specified extensions.
     // The interface Relativity.Transfer.SDK.Interfaces.Options.Policies.IFileExclusionPolicy interface needs to be implemented.
-    private sealed class AcceptExtensionExclusionPolicy(
-        IConsoleLogger consoleLogger,
-        IEnumerable<string> acceptedFileExtensions)
-        : IFileExclusionPolicy
+    private sealed class AcceptExtensionExclusionPolicy : IFileExclusionPolicy
     {
-        private readonly string[] _acceptedFileExtensions = acceptedFileExtensions?.ToArray() ?? Array.Empty<string>();
+        private readonly string[] _acceptedFileExtensions;
+        private readonly IConsoleLogger _consoleLogger1;
+
+        public AcceptExtensionExclusionPolicy(IConsoleLogger consoleLogger,
+	        IEnumerable<string> acceptedFileExtensions)
+        {
+	        _consoleLogger1 = consoleLogger;
+	        _acceptedFileExtensions = acceptedFileExtensions?.ToArray() ?? Array.Empty<string>();
+        }
 
         public Task<bool> ShouldExcludeAsync(IFileReference fileReference)
         {
@@ -90,7 +106,7 @@ internal class UploadDirectoryWithExclusionPolicy(
 
         private void LogResult(string fileName, bool shouldExclude)
         {
-            consoleLogger.Info($"    --> File [gray]{fileName}[/] was {GetResultMarkup(shouldExclude)}");
+            _consoleLogger1.Info($"    --> File [gray]{fileName}[/] was {GetResultMarkup(shouldExclude)}");
         }
 
         private static string GetResultMarkup(bool shouldExclude)

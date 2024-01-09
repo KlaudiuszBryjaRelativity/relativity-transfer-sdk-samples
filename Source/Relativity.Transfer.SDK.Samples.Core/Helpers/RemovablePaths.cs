@@ -4,10 +4,15 @@ using Relativity.Transfer.SDK.Interfaces.Paths;
 
 namespace Relativity.Transfer.SDK.Samples.Core.Helpers;
 
-internal sealed class DisposablePath<TPathBase>(TPathBase path) : IDisposable
+internal sealed class DisposablePath<TPathBase> : IDisposable
 	where TPathBase : PathBase
 {
-	public TPathBase Path { get; } = path;
+	public DisposablePath(TPathBase path)
+	{
+		Path = path;
+	}
+
+	public TPathBase Path { get; }
 
 	public void Dispose()
 	{

@@ -19,23 +19,30 @@ namespace Relativity.Transfer.SDK.Samples.Repository.FullPathWorkflow;
 	"The sample illustrates how to implement a bearer token authentication in RelativityOne.",
 	typeof(BearerTokenAuthentication),
 	TransferType.UploadFile)]
-internal class BearerTokenAuthentication(
-	IConsoleLogger consoleLogger,
-	IPathExtension pathExtension)
-	: ISample
+internal class BearerTokenAuthentication : ISample
 {
+	private readonly IConsoleLogger _consoleLogger;
+	private readonly IPathExtension _pathExtension;
+
+	public BearerTokenAuthentication(IConsoleLogger consoleLogger,
+		IPathExtension pathExtension)
+	{
+		_consoleLogger = consoleLogger;
+		_pathExtension = pathExtension;
+	}
+
 	public async Task ExecuteAsync(Configuration configuration, CancellationToken token)
 	{
 		var clientName = configuration.Common.ClientName;
 		var jobId = configuration.Common.JobId;
 		var source = string.IsNullOrWhiteSpace(configuration.UploadFile.Source)
-			? new DisposablePath<FilePath>(pathExtension.CreateTemporarySourceFile()).Path
+			? new DisposablePath<FilePath>(_pathExtension.CreateTemporarySourceFile()).Path
 			: new FilePath(configuration.UploadFile.Source);
 		var destination = string.IsNullOrWhiteSpace(configuration.UploadFile.Destination)
-			? pathExtension.GetDefaultRemoteDirectoryPathForUpload(configuration.Common)
+			? _pathExtension.GetDefaultRemoteDirectoryPathForUpload(configuration.Common)
 			: new DirectoryPath(configuration.UploadFile.Destination);
 		// Instance of the authentication provider that will be used by the TransferClient.
-		var authenticationProvider = new ClientSecretAuthenticationProvider(consoleLogger,
+		var authenticationProvider = new ClientSecretAuthenticationProvider(_consoleLogger,
 			new Uri(configuration.Common.InstanceUrl),
 			configuration.Common.OAuthCredentials);
 
@@ -46,39 +53,50 @@ internal class BearerTokenAuthentication(
 			.WithClientName(clientName)
 			.Build();
 
-		consoleLogger.PrintCreatingTransfer(jobId, source, destination);
+		_consoleLogger.PrintCreatingTransfer(jobId, source, destination);
 
 		var result = await transferClient
 			.UploadFileAsync(jobId, source, destination, token)
 			.ConfigureAwait(false);
 
-		consoleLogger.PrintTransferResult(result);
+		_consoleLogger.PrintTransferResult(result);
 	}
 
 	/// <summary>
 	///     This class represents an implementation of an Authentication Provider based on OAuth client id and client secret.
 	///     Be aware that this is sample implementation, and it should be used only for testing purposes.
 	/// </summary>
-	private class ClientSecretAuthenticationProvider(
-		IConsoleLogger consoleLogger,
-		Uri instanceUri,
-		OAuthCredentials credentials)
-		: IRelativityAuthenticationProvider
+	private class ClientSecretAuthenticationProvider : IRelativityAuthenticationProvider
 	{
 		private string _bearerToken;
+		private readonly IConsoleLogger _consoleLogger1;
+		private readonly OAuthCredentials _credentials;
 
-		public Uri BaseAddress { get; } = instanceUri;
+		/// <summary>
+		///     This class represents an implementation of an Authentication Provider based on OAuth client id and client secret.
+		///     Be aware that this is sample implementation, and it should be used only for testing purposes.
+		/// </summary>
+		public ClientSecretAuthenticationProvider(IConsoleLogger consoleLogger,
+			Uri instanceUri,
+			OAuthCredentials credentials)
+		{
+			_consoleLogger1 = consoleLogger;
+			_credentials = credentials;
+			BaseAddress = instanceUri;
+		}
+
+		public Uri BaseAddress { get; }
 
 		public async Task<RelativityCredentials> GetCredentialsAsync(CancellationToken cancellationToken)
 		{
 			if (!string.IsNullOrWhiteSpace(_bearerToken))
 			{
-				consoleLogger.Info("Authentication provider - Requesting credentials ([green]CACHED[/])");
+				_consoleLogger1.Info("Authentication provider - Requesting credentials ([green]CACHED[/])");
 
 				return new RelativityCredentials(_bearerToken, BaseAddress);
 			}
 
-			consoleLogger.Info("Authentication provider - [green]Requesting credentials[/]...");
+			_consoleLogger1.Info("Authentication provider - [green]Requesting credentials[/]...");
 			// The token is cached by TransferSDK, but it is important to note that a token may expire during long transfers.
 			// Therefore, it is imperative that your implementation does not cache the token and always provides a valid one.
 			_bearerToken = await GetBearerTokenAsync().ConfigureAwait(false);
@@ -101,8 +119,8 @@ internal class BearerTokenAuthentication(
 			var url = new Uri(BaseAddress, identityServiceTokenUri);
 			var payload = new Dictionary<string, string>
 			{
-				{ "client_id", credentials.ClientId },
-				{ "client_secret", credentials.ClientSecret },
+				{ "client_id", _credentials.ClientId },
+				{ "client_secret", _credentials.ClientSecret },
 				{ "scope", "SystemUserInfo" },
 				{ "grant_type", "client_credentials" }
 			};

@@ -15,12 +15,24 @@ namespace Relativity.Transfer.SDK.Samples.Repository.JobBasedWorkflow;
 	"The sample illustrates how to implement a directory upload (using the job based workflow and a destination path based on an existing job) to a RelativityOne file share.",
 	typeof(UploadDirectoryBasedOnExistingJob),
 	TransferType.UploadDirectoryBasedOnExistingJob)]
-internal class UploadDirectoryBasedOnExistingJob(
-	IConsoleLogger consoleLogger,
-	IPathExtension pathExtension,
-	IRelativityAuthenticationProviderFactory relativityAuthenticationProviderFactory,
-	IProgressHandlerFactory progressHandlerFactory) : ISample
+internal class UploadDirectoryBasedOnExistingJob : ISample
 {
+	private readonly IConsoleLogger _consoleLogger;
+	private readonly IPathExtension _pathExtension;
+	private readonly IRelativityAuthenticationProviderFactory _relativityAuthenticationProviderFactory;
+	private readonly IProgressHandlerFactory _progressHandlerFactory;
+
+	public UploadDirectoryBasedOnExistingJob(IConsoleLogger consoleLogger,
+		IPathExtension pathExtension,
+		IRelativityAuthenticationProviderFactory relativityAuthenticationProviderFactory,
+		IProgressHandlerFactory progressHandlerFactory)
+	{
+		_consoleLogger = consoleLogger;
+		_pathExtension = pathExtension;
+		_relativityAuthenticationProviderFactory = relativityAuthenticationProviderFactory;
+		_progressHandlerFactory = progressHandlerFactory;
+	}
+
 	public async Task ExecuteAsync(Configuration configuration, CancellationToken token)
 	{
 		var clientName = configuration.Common.ClientName;
@@ -29,13 +41,13 @@ internal class UploadDirectoryBasedOnExistingJob(
 		var secondJobId = Guid.NewGuid();
 		var firstSource = new DirectoryPath(configuration.UploadDirectoryBasedOnExistingJob.FirstSource);
 		var destination = string.IsNullOrWhiteSpace(configuration.UploadDirectoryBasedOnExistingJob.Destination)
-			? pathExtension.GetDefaultRemoteDirectoryPathForUpload(configuration.Common)
+			? _pathExtension.GetDefaultRemoteDirectoryPathForUpload(configuration.Common)
 			: new DirectoryPath(configuration.UploadDirectoryBasedOnExistingJob.Destination);
 		// To enhance the visual representation of the newly transferred data alongside the previously transferred data by the preceding job, it is advisable to utilize a unique source data set.
 		var secondSource = new DirectoryPath(configuration.UploadDirectoryBasedOnExistingJob.SecondSource);
-		var authenticationProvider = relativityAuthenticationProviderFactory.Create(configuration.Common);
+		var authenticationProvider = _relativityAuthenticationProviderFactory.Create(configuration.Common);
 		var jobBuilder = new TransferJobBuilder(authenticationProvider);
-		var progressHandler = progressHandlerFactory.Create();
+		var progressHandler = _progressHandlerFactory.Create();
 
 		await RegisterUploadDirectoryJobAsync(jobBuilder, firstJobId, destination).ConfigureAwait(false);
 
@@ -47,13 +59,13 @@ internal class UploadDirectoryBasedOnExistingJob(
 			.WithClientName(clientName)
 			.Build();
 
-		consoleLogger.PrintCreatingTransfer(firstJobId, firstSource, destination);
+		_consoleLogger.PrintCreatingTransfer(firstJobId, firstSource, destination);
 
 		var firstResult = await transferClient
 			.UploadDirectoryAsync(firstJobId, firstSource, progressHandler, token)
 			.ConfigureAwait(false);
 
-		consoleLogger.PrintTransferResult(firstResult, "First transfer has finished:", false);
+		_consoleLogger.PrintTransferResult(firstResult, "First transfer has finished:", false);
 
 		await RegisterUploadJobFromExistingJobAsync(jobBuilder, secondJobId, firstJobId).ConfigureAwait(false);
 
@@ -61,7 +73,7 @@ internal class UploadDirectoryBasedOnExistingJob(
 			.UploadDirectoryAsync(secondJobId, secondSource, progressHandler, token)
 			.ConfigureAwait(false);
 
-		consoleLogger.PrintTransferResult(secondResult, "Second transfer has finished:");
+		_consoleLogger.PrintTransferResult(secondResult, "Second transfer has finished:");
 	}
 
 	/// <summary>
@@ -70,7 +82,7 @@ internal class UploadDirectoryBasedOnExistingJob(
 	private async Task RegisterUploadJobFromExistingJobAsync(TransferJobBuilder jobBuilder, Guid jobId,
 		Guid existingJobId)
 	{
-		consoleLogger.PrintRegisteringTransferJob(jobId, existingJobId: existingJobId);
+		_consoleLogger.PrintRegisteringTransferJob(jobId, existingJobId: existingJobId);
 
 		await jobBuilder.FromExistingJob(existingJobId).CreateUploadJobAsync(jobId)
 			.ConfigureAwait(false);
@@ -83,7 +95,7 @@ internal class UploadDirectoryBasedOnExistingJob(
 	private async Task RegisterUploadDirectoryJobAsync(TransferJobBuilder jobBuilder, Guid firstUploadJobId,
 		DirectoryPath destination)
 	{
-		consoleLogger.PrintRegisteringTransferJob(firstUploadJobId, destination: destination);
+		_consoleLogger.PrintRegisteringTransferJob(firstUploadJobId, destination: destination);
 
 		await jobBuilder.NewJob().CreateUploadDirectoryJobAsync(firstUploadJobId, destination).ConfigureAwait(false);
 	}

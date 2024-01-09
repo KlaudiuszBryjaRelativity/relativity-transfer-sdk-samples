@@ -16,22 +16,34 @@ namespace Relativity.Transfer.SDK.Samples.Repository.JobBasedWorkflow;
 	"The sample illustrates how to implement a directory upload (using the job based workflow) to a RelativityOne file share.",
 	typeof(UploadDirectory),
 	TransferType.UploadDirectory)]
-internal sealed class UploadDirectory(
-	IConsoleLogger consoleLogger,
-	IPathExtension pathExtension,
-	IRelativityAuthenticationProviderFactory relativityAuthenticationProviderFactory,
-	IProgressHandlerFactory progressHandlerFactory) : ISample
+internal sealed class UploadDirectory : ISample
 {
+	private readonly IConsoleLogger _consoleLogger;
+	private readonly IPathExtension _pathExtension;
+	private readonly IRelativityAuthenticationProviderFactory _relativityAuthenticationProviderFactory;
+	private readonly IProgressHandlerFactory _progressHandlerFactory;
+
+	public UploadDirectory(IConsoleLogger consoleLogger,
+		IPathExtension pathExtension,
+		IRelativityAuthenticationProviderFactory relativityAuthenticationProviderFactory,
+		IProgressHandlerFactory progressHandlerFactory)
+	{
+		_consoleLogger = consoleLogger;
+		_pathExtension = pathExtension;
+		_relativityAuthenticationProviderFactory = relativityAuthenticationProviderFactory;
+		_progressHandlerFactory = progressHandlerFactory;
+	}
+
 	public async Task ExecuteAsync(Configuration configuration, CancellationToken token)
 	{
 		var clientName = configuration.Common.ClientName;
 		var jobId = configuration.Common.JobId;
 		var source = new DirectoryPath(configuration.UploadDirectory.Source);
 		var destination = string.IsNullOrWhiteSpace(configuration.UploadDirectory.Destination)
-			? pathExtension.GetDefaultRemoteDirectoryPathForUpload(configuration.Common)
+			? _pathExtension.GetDefaultRemoteDirectoryPathForUpload(configuration.Common)
 			: new DirectoryPath(configuration.UploadDirectory.Destination);
-		var authenticationProvider = relativityAuthenticationProviderFactory.Create(configuration.Common);
-		var progressHandler = progressHandlerFactory.Create();
+		var authenticationProvider = _relativityAuthenticationProviderFactory.Create(configuration.Common);
+		var progressHandler = _progressHandlerFactory.Create();
 
 		await RegisterUploadDirectoryJobAsync(authenticationProvider, jobId, destination).ConfigureAwait(false);
 
@@ -43,13 +55,13 @@ internal sealed class UploadDirectory(
 			.WithClientName(clientName)
 			.Build();
 
-		consoleLogger.PrintCreatingTransfer(jobId, source, destination);
+		_consoleLogger.PrintCreatingTransfer(jobId, source, destination);
 
 		var result = await transferClient
 			.UploadDirectoryAsync(jobId, source, progressHandler, token)
 			.ConfigureAwait(false);
 
-		consoleLogger.PrintTransferResult(result);
+		_consoleLogger.PrintTransferResult(result);
 	}
 
 	/// <summary>
@@ -59,7 +71,7 @@ internal sealed class UploadDirectory(
 	private async Task RegisterUploadDirectoryJobAsync(IRelativityAuthenticationProvider authenticationProvider,
 		Guid jobId, DirectoryPath destination)
 	{
-		consoleLogger.PrintRegisteringTransferJob(jobId, destination: destination);
+		_consoleLogger.PrintRegisteringTransferJob(jobId, destination: destination);
 
 		var jobBuilder = new TransferJobBuilder(authenticationProvider);
 		await jobBuilder.NewJob().CreateUploadDirectoryJobAsync(jobId, destination).ConfigureAwait(false);

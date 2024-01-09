@@ -16,22 +16,34 @@ namespace Relativity.Transfer.SDK.Samples.Repository.JobBasedWorkflow;
 	"The sample illustrates how to implement a directory download (using the job based workflow) from a RelativityOne file share.",
 	typeof(DownloadDirectory),
 	TransferType.DownloadDirectory)]
-internal sealed class DownloadDirectory(
-	IConsoleLogger consoleLogger,
-	IPathExtension pathExtension,
-	IRelativityAuthenticationProviderFactory relativityAuthenticationProviderFactory,
-	IProgressHandlerFactory progressHandlerFactory) : ISample
+internal sealed class DownloadDirectory : ISample
 {
+	private readonly IConsoleLogger _consoleLogger;
+	private readonly IPathExtension _pathExtension;
+	private readonly IRelativityAuthenticationProviderFactory _relativityAuthenticationProviderFactory;
+	private readonly IProgressHandlerFactory _progressHandlerFactory;
+
+	public DownloadDirectory(IConsoleLogger consoleLogger,
+		IPathExtension pathExtension,
+		IRelativityAuthenticationProviderFactory relativityAuthenticationProviderFactory,
+		IProgressHandlerFactory progressHandlerFactory)
+	{
+		_consoleLogger = consoleLogger;
+		_pathExtension = pathExtension;
+		_relativityAuthenticationProviderFactory = relativityAuthenticationProviderFactory;
+		_progressHandlerFactory = progressHandlerFactory;
+	}
+
 	public async Task ExecuteAsync(Configuration configuration, CancellationToken token)
 	{
 		var clientName = configuration.Common.ClientName;
 		var jobId = configuration.Common.JobId;
 		var source = string.IsNullOrWhiteSpace(configuration.DownloadDirectory.Source)
-			? pathExtension.GetDefaultRemoteDirectoryPathForDownload(configuration.Common)
+			? _pathExtension.GetDefaultRemoteDirectoryPathForDownload(configuration.Common)
 			: new DirectoryPath(configuration.DownloadDirectory.Source);
-		var destination = pathExtension.EnsureLocalDirectory(configuration.DownloadDirectory.Destination);
-		var authenticationProvider = relativityAuthenticationProviderFactory.Create(configuration.Common);
-		var progressHandler = progressHandlerFactory.Create();
+		var destination = _pathExtension.EnsureLocalDirectory(configuration.DownloadDirectory.Destination);
+		var authenticationProvider = _relativityAuthenticationProviderFactory.Create(configuration.Common);
+		var progressHandler = _progressHandlerFactory.Create();
 
 		await RegisterDownloadJobAsync(authenticationProvider, jobId, source).ConfigureAwait(false);
 
@@ -43,13 +55,13 @@ internal sealed class DownloadDirectory(
 			.WithClientName(clientName)
 			.Build();
 
-		consoleLogger.PrintCreatingTransfer(jobId, source, destination);
+		_consoleLogger.PrintCreatingTransfer(jobId, source, destination);
 
 		var result = await transferClient
 			.DownloadDirectoryAsync(jobId, destination, progressHandler, token)
 			.ConfigureAwait(false);
 
-		consoleLogger.PrintTransferResult(result);
+		_consoleLogger.PrintTransferResult(result);
 	}
 
 	/// <summary>
@@ -59,7 +71,7 @@ internal sealed class DownloadDirectory(
 	private async Task RegisterDownloadJobAsync(IRelativityAuthenticationProvider authenticationProvider, Guid jobId,
 		DirectoryPath source)
 	{
-		consoleLogger.PrintRegisteringTransferJob(jobId, source);
+		_consoleLogger.PrintRegisteringTransferJob(jobId, source);
 
 		var jobBuilder = new TransferJobBuilder(authenticationProvider);
 		await jobBuilder.NewJob().CreateDownloadDirectoryJobAsync(jobId, source).ConfigureAwait(false);
