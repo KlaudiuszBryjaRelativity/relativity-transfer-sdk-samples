@@ -4,13 +4,20 @@ using System.Dynamic;
 
 namespace Relativity.Transfer.SDK.Samples.Core.DTOs;
 
-internal sealed class FileShareInfo(int artifactId, string name, string uncPath) : IEquatable<FileShareInfo>
+internal sealed class FileShareInfo : IEquatable<FileShareInfo>
 {
 	internal static readonly FileShareInfo BackToToMainMenu = new(int.MinValue, "Back", string.Empty);
 
-	public int ArtifactId { get; init; } = artifactId;
-	public string Name { get; init; } = name;
-	public string UncPath { get; init; } = uncPath;
+	public FileShareInfo(int artifactId, string name, string uncPath)
+	{
+		ArtifactId = artifactId;
+		Name = name;
+		UncPath = uncPath;
+	}
+
+	public int ArtifactId { get; init; }
+	public string Name { get; init; }
+	public string UncPath { get; init; }
 
 	internal bool IsBackToMainMenuOption => Equals(BackToToMainMenu);
 

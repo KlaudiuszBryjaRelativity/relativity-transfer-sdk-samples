@@ -14,23 +14,34 @@ namespace Relativity.Transfer.SDK.Samples.Repository.FullPathWorkflow;
     "The sample illustrates how to implement a directory upload to a RelativityOne file share.",
     typeof(UploadDirectory),
     TransferType.UploadDirectory)]
-internal class UploadDirectory(
-    IConsoleLogger consoleLogger,
-    IPathExtension pathExtension,
-    IRelativityAuthenticationProviderFactory relativityAuthenticationProviderFactory,
-    IProgressHandlerFactory progressHandlerFactory)
-    : ISample
+internal class UploadDirectory : ISample
 {
-    public async Task ExecuteAsync(Configuration configuration, CancellationToken token)
+	private readonly IConsoleLogger _consoleLogger;
+	private readonly IPathExtension _pathExtension;
+	private readonly IRelativityAuthenticationProviderFactory _relativityAuthenticationProviderFactory;
+	private readonly IProgressHandlerFactory _progressHandlerFactory;
+
+	public UploadDirectory(IConsoleLogger consoleLogger,
+		IPathExtension pathExtension,
+		IRelativityAuthenticationProviderFactory relativityAuthenticationProviderFactory,
+		IProgressHandlerFactory progressHandlerFactory)
+	{
+		_consoleLogger = consoleLogger;
+		_pathExtension = pathExtension;
+		_relativityAuthenticationProviderFactory = relativityAuthenticationProviderFactory;
+		_progressHandlerFactory = progressHandlerFactory;
+	}
+
+	public async Task ExecuteAsync(Configuration configuration, CancellationToken token)
     {
         var clientName = configuration.Common.ClientName;
         var jobId = configuration.Common.JobId;
         var source = new DirectoryPath(configuration.UploadDirectory.Source);
         var destination = string.IsNullOrWhiteSpace(configuration.UploadDirectory.Destination)
-            ? pathExtension.GetDefaultRemoteDirectoryPathForUpload(configuration.Common)
+            ? _pathExtension.GetDefaultRemoteDirectoryPathForUpload(configuration.Common)
             : new DirectoryPath(configuration.UploadDirectory.Destination);
-        var authenticationProvider = relativityAuthenticationProviderFactory.Create(configuration.Common);
-        var progressHandler = progressHandlerFactory.Create();
+        var authenticationProvider = _relativityAuthenticationProviderFactory.Create(configuration.Common);
+        var progressHandler = _progressHandlerFactory.Create();
 
         // The builder follows the Fluent convention, and more options will be added in the future. The only required component (besides the client name)
         // is the authentication provider - a provided one that utilizes an OAuth-based approach has been provided, but the custom implementation can be created.
@@ -39,12 +50,12 @@ internal class UploadDirectory(
             .WithClientName(clientName)
             .Build();
 
-        consoleLogger.PrintCreatingTransfer(jobId, source, destination);
+        _consoleLogger.PrintCreatingTransfer(jobId, source, destination);
 
         var result = await transferClient
             .UploadDirectoryAsync(jobId, source, destination, progressHandler, token)
             .ConfigureAwait(false);
 
-        consoleLogger.PrintTransferResult(result);
+        _consoleLogger.PrintTransferResult(result);
     }
 }

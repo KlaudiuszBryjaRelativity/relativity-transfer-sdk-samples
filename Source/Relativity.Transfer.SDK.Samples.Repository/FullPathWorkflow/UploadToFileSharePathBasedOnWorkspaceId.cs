@@ -23,32 +23,47 @@ namespace Relativity.Transfer.SDK.Samples.Repository.FullPathWorkflow;
     "The sample illustrates the implementation of a transfer based on a WorkspaceId.",
     typeof(UploadToFileSharePathBasedOnWorkspaceId),
     TransferType.UploadDirectoryByWorkspaceId)]
-internal class UploadToFileSharePathBasedOnWorkspaceId(
-    IConsoleLogger consoleLogger,
-    IPathExtension pathExtension,
-    IRelativityAuthenticationProviderFactory relativityAuthenticationProviderFactory,
-    IProgressHandlerFactory progressHandlerFactory,
-    IBearerTokenRetriever bearerTokenRetriever,
-    IFileShareSelectorMenu fileShareSelectorMenu)
-    : ISample
+internal class UploadToFileSharePathBasedOnWorkspaceId : ISample
 {
-    public async Task ExecuteAsync(Configuration configuration, CancellationToken token)
+	private readonly IConsoleLogger _consoleLogger;
+	private readonly IPathExtension _pathExtension;
+	private readonly IRelativityAuthenticationProviderFactory _relativityAuthenticationProviderFactory;
+	private readonly IProgressHandlerFactory _progressHandlerFactory;
+	private readonly IBearerTokenRetriever _bearerTokenRetriever;
+	private readonly IFileShareSelectorMenu _fileShareSelectorMenu;
+
+	public UploadToFileSharePathBasedOnWorkspaceId(IConsoleLogger consoleLogger,
+		IPathExtension pathExtension,
+		IRelativityAuthenticationProviderFactory relativityAuthenticationProviderFactory,
+		IProgressHandlerFactory progressHandlerFactory,
+		IBearerTokenRetriever bearerTokenRetriever,
+		IFileShareSelectorMenu fileShareSelectorMenu)
+	{
+		_consoleLogger = consoleLogger;
+		_pathExtension = pathExtension;
+		_relativityAuthenticationProviderFactory = relativityAuthenticationProviderFactory;
+		_progressHandlerFactory = progressHandlerFactory;
+		_bearerTokenRetriever = bearerTokenRetriever;
+		_fileShareSelectorMenu = fileShareSelectorMenu;
+	}
+
+	public async Task ExecuteAsync(Configuration configuration, CancellationToken token)
     {
         var clientName = configuration.Common.ClientName;
         var jobId = configuration.Common.JobId;
         var source = new DirectoryPath(configuration.UploadDirectoryByWorkspaceId.Source);
-        var authenticationProvider = relativityAuthenticationProviderFactory.Create(configuration.Common);
-        var progressHandler = progressHandlerFactory.Create();
+        var authenticationProvider = _relativityAuthenticationProviderFactory.Create(configuration.Common);
+        var progressHandler = _progressHandlerFactory.Create();
 
         // Get list of file shares by workspace ID. The association is based on Resource Pool assigned to the workspace.
-        var fileSharesRetriever = new WorkspaceFileSharesRetriever(configuration, bearerTokenRetriever);
+        var fileSharesRetriever = new WorkspaceFileSharesRetriever(configuration, _bearerTokenRetriever);
         var fileShareInfos = await fileSharesRetriever.GetWorkspaceFileSharesAsync().ConfigureAwait(false);
-        var fileShareInfo = fileShareSelectorMenu.SelectFileShare(fileShareInfos, token);
+        var fileShareInfo = _fileShareSelectorMenu.SelectFileShare(fileShareInfos, token);
 
         if (fileShareInfo == null) return;
 
         // Build a destination path based on the selected file share (its UNC path).
-        var destination = pathExtension.GetDestinationDirectoryPathByFileShareInfo(fileShareInfo.UncPath,
+        var destination = _pathExtension.GetDestinationDirectoryPathByFileShareInfo(fileShareInfo.UncPath,
             configuration.Common.FileShareRelativePath, jobId);
 
         // The builder follows the Fluent convention, and more options will be added in the future. The only required component (besides the client name)
@@ -58,21 +73,19 @@ internal class UploadToFileSharePathBasedOnWorkspaceId(
             .WithClientName(clientName)
             .Build();
 
-        consoleLogger.PrintCreatingTransfer(jobId, source, destination);
+        _consoleLogger.PrintCreatingTransfer(jobId, source, destination);
 
         var result = await transferClient
             .UploadDirectoryAsync(jobId, source, destination, progressHandler, token)
             .ConfigureAwait(false);
 
-        consoleLogger.PrintTransferResult(result);
+        _consoleLogger.PrintTransferResult(result);
     }
 
     /// <summary>
     ///     Helper class to retrieve file shares by workspace ID.
     /// </summary>
-    private class WorkspaceFileSharesRetriever(
-        Configuration configuration,
-        IBearerTokenRetriever bearerTokenRetriever)
+    private class WorkspaceFileSharesRetriever
     {
         private const string GetFileShareServerUri =
             "/relativity.rest/api/Relativity.Services.Workspace.IWorkspaceModule/Workspace%20Manager%20Service/";
@@ -82,7 +95,20 @@ internal class UploadToFileSharePathBasedOnWorkspaceId(
                 "GetAssociatedFileShareResourceServersAsync"; // this only reads OAuth2 Client data (which means the secret can be outdated)
 
         private const string MediaTypeApplicationJson = "application/json";
-        private readonly Uri _baseUri = new(new Uri(configuration.Common.InstanceUrl), GetFileShareServerUri);
+        private readonly Uri _baseUri;
+        private readonly Configuration _configuration;
+        private readonly IBearerTokenRetriever _bearerTokenRetriever1;
+
+        /// <summary>
+        ///     Helper class to retrieve file shares by workspace ID.
+        /// </summary>
+        public WorkspaceFileSharesRetriever(Configuration configuration,
+	        IBearerTokenRetriever bearerTokenRetriever)
+        {
+	        _configuration = configuration;
+	        _bearerTokenRetriever1 = bearerTokenRetriever;
+	        _baseUri = new(new Uri(configuration.Common.InstanceUrl), GetFileShareServerUri);
+        }
 
 
         /// <summary>
@@ -109,15 +135,15 @@ internal class UploadToFileSharePathBasedOnWorkspaceId(
         /// </returns>
         public async Task<FileShareInfo[]> GetWorkspaceFileSharesAsync()
         {
-            var token = await bearerTokenRetriever.RetrieveTokenAsync(new Uri(configuration.Common.InstanceUrl),
-                configuration.Common.OAuthCredentials);
+            var token = await _bearerTokenRetriever1.RetrieveTokenAsync(new Uri(_configuration.Common.InstanceUrl),
+                _configuration.Common.OAuthCredentials);
 
             using var httpClient = new HttpClient();
             httpClient.DefaultRequestHeaders.Add("X-CSRF-Header", "-");
             httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
             var endpoint = new Uri(_baseUri, GetFileSharesMethodName);
             var body = new StringContent(
-                $"{{ workspace: {{ ArtifactId:'{configuration.UploadDirectoryByWorkspaceId.WorkspaceId}'}}}}",
+                $"{{ workspace: {{ ArtifactId:'{_configuration.UploadDirectoryByWorkspaceId.WorkspaceId}'}}}}",
                 Encoding.UTF8,
                 MediaTypeApplicationJson);
             var response = await httpClient.PostAsync(endpoint, body);

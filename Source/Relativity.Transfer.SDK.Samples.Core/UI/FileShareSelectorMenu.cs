@@ -5,13 +5,20 @@ using Relativity.Transfer.SDK.Samples.Core.Helpers;
 
 namespace Relativity.Transfer.SDK.Samples.Core.UI;
 
-internal sealed class FileShareSelectorMenu(IConsoleLogger consoleLogger) : IFileShareSelectorMenu
+internal sealed class FileShareSelectorMenu : IFileShareSelectorMenu
 {
+	private readonly IConsoleLogger _consoleLogger;
+
+	public FileShareSelectorMenu(IConsoleLogger consoleLogger)
+	{
+		_consoleLogger = consoleLogger;
+	}
+
 	public FileShareInfo SelectFileShare(FileShareInfo[] fileShareInfos, CancellationToken token)
 	{
 		if (!fileShareInfos.Any())
 		{
-			consoleLogger.Info("[red]There are no file shares for provided workspace Id.[/]");
+			_consoleLogger.Info("[red]There are no file shares for provided workspace Id.[/]");
 
 			return null;
 		}
@@ -19,12 +26,12 @@ internal sealed class FileShareSelectorMenu(IConsoleLogger consoleLogger) : IFil
 		if (fileShareInfos.Length == 1)
 		{
 			var uncPath = fileShareInfos[0].UncPath;
-			consoleLogger.Info(
+			_consoleLogger.Info(
 				$"[yellow]There is only one file share for provided workspace Id. Its UNCPath is[/] [green]{uncPath}[/]");
 
 			return fileShareInfos[0];
 		}
 
-		return consoleLogger.PrintFileShareInfosMenu(fileShareInfos);
+		return _consoleLogger.PrintFileShareInfosMenu(fileShareInfos);
 	}
 }

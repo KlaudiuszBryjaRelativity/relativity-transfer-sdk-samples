@@ -20,26 +20,35 @@ namespace Relativity.Transfer.SDK.Samples.Repository.FullPathWorkflow;
     "The sample illustrates how to implement a progress handler (statistics and events for files).",
     typeof(SettingUpProgressHandlerAndPrintingSummary),
     TransferType.UploadDirectory)]
-internal class SettingUpProgressHandlerAndPrintingSummary(
-    IConsoleLogger consoleLogger,
-    IPathExtension pathExtension,
-    IRelativityAuthenticationProviderFactory relativityAuthenticationProviderFactory)
-    : ISample
+internal class SettingUpProgressHandlerAndPrintingSummary : ISample
 {
-    public async Task ExecuteAsync(Configuration configuration, CancellationToken token)
+	private readonly IConsoleLogger _consoleLogger;
+	private readonly IPathExtension _pathExtension;
+	private readonly IRelativityAuthenticationProviderFactory _relativityAuthenticationProviderFactory;
+
+	public SettingUpProgressHandlerAndPrintingSummary(IConsoleLogger consoleLogger,
+		IPathExtension pathExtension,
+		IRelativityAuthenticationProviderFactory relativityAuthenticationProviderFactory)
+	{
+		_consoleLogger = consoleLogger;
+		_pathExtension = pathExtension;
+		_relativityAuthenticationProviderFactory = relativityAuthenticationProviderFactory;
+	}
+
+	public async Task ExecuteAsync(Configuration configuration, CancellationToken token)
     {
         var clientName = configuration.Common.ClientName;
         var jobId = configuration.Common.JobId;
         var source = string.IsNullOrWhiteSpace(configuration.UploadDirectory.Source)
-            ? pathExtension.CreateTemporaryDirectoryWithFiles(jobId)
+            ? _pathExtension.CreateTemporaryDirectoryWithFiles(jobId)
             : new DirectoryPath(configuration.UploadDirectory.Source);
         var additionalLine = string.IsNullOrWhiteSpace(configuration.UploadDirectory.Source)
             ? "This Sample will display statistics while transferring a few small files, a few bytes each, and a few large files, each with a size of a few hundreds MiB"
             : string.Empty;
         var destination = string.IsNullOrWhiteSpace(configuration.UploadDirectory.Destination)
-            ? pathExtension.GetDefaultRemoteDirectoryPathForUpload(configuration.Common)
+            ? _pathExtension.GetDefaultRemoteDirectoryPathForUpload(configuration.Common)
             : new DirectoryPath(configuration.UploadDirectory.Destination);
-        var authenticationProvider = relativityAuthenticationProviderFactory.Create(configuration.Common);
+        var authenticationProvider = _relativityAuthenticationProviderFactory.Create(configuration.Common);
 
         // The builder follows the Fluent convention, and more options will be added in the future. The only required component (besides the client name)
         // is the authentication provider - a provided one that utilizes an OAuth-based approach has been provided, but the custom implementation can be created.
@@ -48,7 +57,7 @@ internal class SettingUpProgressHandlerAndPrintingSummary(
             .WithClientName(clientName)
             .Build();
 
-        consoleLogger.PrintCreatingTransfer(jobId, source, destination, additionalLine);
+        _consoleLogger.PrintCreatingTransfer(jobId, source, destination, additionalLine);
 
         var result = await transferClient
             .UploadDirectoryAsync(jobId, source, destination, GetProgressHandler(), default)

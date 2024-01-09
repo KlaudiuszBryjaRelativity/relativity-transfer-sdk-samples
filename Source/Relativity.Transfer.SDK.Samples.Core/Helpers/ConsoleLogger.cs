@@ -130,7 +130,7 @@ internal sealed class ConsoleLogger : IConsoleLogger
 
 	private static void AddAdditionalLinesIfRequired(string[] additionalLines)
 	{
-		var lines = (additionalLines ?? []).Where(x => !string.IsNullOrWhiteSpace(x)).ToArray();
+		var lines = (additionalLines ?? Array.Empty<string>()).Where(x => !string.IsNullOrWhiteSpace(x)).ToArray();
 		if (lines.Length == 0) return;
 
 		AnsiConsole.WriteLine();

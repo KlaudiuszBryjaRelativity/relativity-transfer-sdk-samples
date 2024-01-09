@@ -9,8 +9,15 @@ using Color = Spectre.Console.Color;
 
 namespace Relativity.Transfer.SDK.Samples.Core.UI;
 
-internal sealed class ConfigurationScreen(IPathExtension pathExtension) : IConfigurationScreen
+internal sealed class ConfigurationScreen : IConfigurationScreen
 {
+	private readonly IPathExtension _pathExtension;
+
+	public ConfigurationScreen(IPathExtension pathExtension)
+	{
+		_pathExtension = pathExtension;
+	}
+
 	public Configuration.Configuration UpdateConfiguration(Configuration.Configuration configuration,
 		SampleAttribute sampleAttribute)
 	{
@@ -128,7 +135,7 @@ internal sealed class ConfigurationScreen(IPathExtension pathExtension) : IConfi
 	private string GetDefaultUploadDirectoryDestination(CommonConfiguration common, string defaultValue)
 	{
 		return string.IsNullOrWhiteSpace(defaultValue)
-			? pathExtension.GetDefaultRemoteDirectoryPathForUploadAsString(common)
+			? _pathExtension.GetDefaultRemoteDirectoryPathForUploadAsString(common)
 			: defaultValue;
 	}
 
@@ -138,7 +145,7 @@ internal sealed class ConfigurationScreen(IPathExtension pathExtension) : IConfi
 		var source = configuration.DownloadDirectory.Source;
 
 		return string.IsNullOrWhiteSpace(source)
-			? pathExtension.GetDefaultRemoteDirectoryPathForDownloadAsString(common)
+			? _pathExtension.GetDefaultRemoteDirectoryPathForDownloadAsString(common)
 			: source;
 	}
 

@@ -3,22 +3,29 @@
 namespace Relativity.Transfer.SDK.Samples.Core.Attributes;
 
 [AttributeUsage(AttributeTargets.Class)]
-internal sealed class SampleAttribute(
-	int order,
-	string menuCaption,
-	string sampleDescription,
-	Type sampleType,
-	TransferType transferType)
-	: Attribute, IEquatable<SampleAttribute>
+internal sealed class SampleAttribute : Attribute, IEquatable<SampleAttribute>
 {
 	internal static readonly SampleAttribute ExitOptionAttribute =
 		new(int.MaxValue, "Exit", "Options allows to exit application.", null, TransferType.Default);
 
-	public int Order { get; } = order;
-	public string MenuCaption { get; } = menuCaption;
-	public string SampleDescription { get; } = sampleDescription;
-	public Type SampleType { get; } = sampleType;
-	public TransferType TransferType { get; } = transferType;
+	public SampleAttribute(int order,
+		string menuCaption,
+		string sampleDescription,
+		Type sampleType,
+		TransferType transferType)
+	{
+		Order = order;
+		MenuCaption = menuCaption;
+		SampleDescription = sampleDescription;
+		SampleType = sampleType;
+		TransferType = transferType;
+	}
+
+	public int Order { get; }
+	public string MenuCaption { get; }
+	public string SampleDescription { get; }
+	public Type SampleType { get; }
+	public TransferType TransferType { get; }
 
 	internal bool IsExitOption => Equals(ExitOptionAttribute);
 
