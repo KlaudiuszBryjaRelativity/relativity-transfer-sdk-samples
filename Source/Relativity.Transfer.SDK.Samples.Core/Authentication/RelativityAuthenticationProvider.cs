@@ -39,7 +39,6 @@ internal class RelativityAuthenticationProvider : IRelativityAuthenticationProvi
 
 			if (!string.IsNullOrWhiteSpace(_bearerToken))
 			{
-				_consoleLogger.Info("Authentication provider - Requesting credentials (CACHED)");
 				return new RelativityCredentials(_bearerToken, BaseAddress);
 			}
 
