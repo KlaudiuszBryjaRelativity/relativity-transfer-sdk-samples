@@ -12,13 +12,13 @@ using Relativity.Transfer.SDK.Samples.Core.ProgressHandler;
 using Relativity.Transfer.SDK.Samples.Core.Runner;
 using Relativity.Transfer.SDK.Samples.Repository.Common;
 
-namespace Relativity.Transfer.SDK.Samples.Repository.FullPathWorkflow;
+namespace Relativity.Transfer.SDK.Samples.Repository.JobBasedWorkflow;
 
-[Sample((int)SampleOrder.UploadItems, 
-    "Upload items",
-    "The sample illustrates how to implement files upload to a RelativityOne file share. ", 
+[Sample((int)SampleOrder.UploadItemsJobBasedWorkflow, 
+    "Upload items by workspace id (using the job based workflow)",
+    "The sample illustrates how to implement files upload (using the job based workflow) to a RelativityOne file share. ", 
     typeof(UploadItems), 
-    TransferType.UploadItems)]
+    TransferType.UploadItemsByWorkspaceId)]
 internal class UploadItems : ISample
 {
     private readonly IConsoleLogger _consoleLogger;
@@ -47,7 +47,8 @@ internal class UploadItems : ISample
         
         // The builder follows the Fluent convention, and more options will be added in the future. The only required component (besides the client name)
         // is the authentication provider - a provided one that utilizes an OAuth-based approach has been provided, but the custom implementation can be created.
-        var transferClient = TransferClientBuilder.FullPathWorkflow
+        // The Transfer SDK client builder creates a job based workflow.
+        var transferClient = TransferClientBuilder.JobBasedWorkflow
             .WithAuthentication(authenticationProvider)
             .WithClientName(clientName)
             .WithStagingExplorerContext()
@@ -59,7 +60,7 @@ internal class UploadItems : ISample
         {
             var sources = GetTransferredEntities(configuration.UploadFile.Source);
             var result = await transferClient
-                .UploadItemsAsync(jobId, sources, destination, progressHandler, token)
+                .UploadItemsAsync(jobId, sources, progressHandler, token)
                 .ConfigureAwait(false);
             
             _consoleLogger.PrintTransferResult(result);

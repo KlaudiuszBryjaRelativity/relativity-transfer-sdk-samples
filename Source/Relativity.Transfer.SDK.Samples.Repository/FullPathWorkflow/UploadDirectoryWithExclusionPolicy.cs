@@ -13,10 +13,11 @@ using Relativity.Transfer.SDK.Samples.Core.Configuration;
 using Relativity.Transfer.SDK.Samples.Core.Helpers;
 using Relativity.Transfer.SDK.Samples.Core.ProgressHandler;
 using Relativity.Transfer.SDK.Samples.Core.Runner;
+using Relativity.Transfer.SDK.Samples.Repository.Common;
 
 namespace Relativity.Transfer.SDK.Samples.Repository.FullPathWorkflow;
 
-[Sample(6, "An exclusion policy",
+[Sample((int)SampleOrder.UploadDirectoryWithExclusionPolicy, "An exclusion policy",
     "The sample illustrates the implementation of an exclusion policy.",
     typeof(UploadDirectoryWithExclusionPolicy),
     TransferType.UploadDirectory)]

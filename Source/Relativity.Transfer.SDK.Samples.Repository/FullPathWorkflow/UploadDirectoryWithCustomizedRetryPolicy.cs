@@ -10,10 +10,11 @@ using Relativity.Transfer.SDK.Samples.Core.Configuration;
 using Relativity.Transfer.SDK.Samples.Core.Helpers;
 using Relativity.Transfer.SDK.Samples.Core.ProgressHandler;
 using Relativity.Transfer.SDK.Samples.Core.Runner;
+using Relativity.Transfer.SDK.Samples.Repository.Common;
 
 namespace Relativity.Transfer.SDK.Samples.Repository.FullPathWorkflow;
 
-[Sample(5, "A retry policy",
+[Sample((int)SampleOrder.UploadDirectoryWithCustomizedRetryPolicy, "A retry policy",
     "The sample illustrates the implementation of a retry policy to enhance the resilience of a transfer.",
     typeof(UploadDirectoryWithCustomizedRetryPolicy),
     TransferType.UploadDirectory)]

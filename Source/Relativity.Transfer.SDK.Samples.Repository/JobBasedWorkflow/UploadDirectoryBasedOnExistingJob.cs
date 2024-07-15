@@ -8,10 +8,11 @@ using Relativity.Transfer.SDK.Samples.Core.Configuration;
 using Relativity.Transfer.SDK.Samples.Core.Helpers;
 using Relativity.Transfer.SDK.Samples.Core.ProgressHandler;
 using Relativity.Transfer.SDK.Samples.Core.Runner;
+using Relativity.Transfer.SDK.Samples.Repository.Common;
 
 namespace Relativity.Transfer.SDK.Samples.Repository.JobBasedWorkflow;
 
-[Sample(11, "Upload a directory (using the job based workflow and based on an existing job)",
+[Sample((int)SampleOrder.UploadDirectoryBasedOnExistingJob, "Upload a directory (using the job based workflow and based on an existing job)",
 	"The sample illustrates how to implement a directory upload (using the job based workflow and a destination path based on an existing job) to a RelativityOne file share.",
 	typeof(UploadDirectoryBasedOnExistingJob),
 	TransferType.UploadDirectoryBasedOnExistingJob)]

@@ -16,10 +16,11 @@ using Relativity.Transfer.SDK.Samples.Core.Helpers;
 using Relativity.Transfer.SDK.Samples.Core.ProgressHandler;
 using Relativity.Transfer.SDK.Samples.Core.Runner;
 using Relativity.Transfer.SDK.Samples.Core.UI;
+using Relativity.Transfer.SDK.Samples.Repository.Common;
 
 namespace Relativity.Transfer.SDK.Samples.Repository.FullPathWorkflow;
 
-[Sample(5, "A transfer based on a WorkspaceId",
+[Sample((int)SampleOrder.UploadToFileSharePathBasedOnWorkspaceId, "A transfer based on a WorkspaceId",
     "The sample illustrates the implementation of a transfer based on a WorkspaceId.",
     typeof(UploadToFileSharePathBasedOnWorkspaceId),
     TransferType.UploadDirectoryByWorkspaceId)]
@@ -74,7 +75,7 @@ internal class UploadToFileSharePathBasedOnWorkspaceId : ISample
             .WithAuthentication(authenticationProvider)
             .WithClientName(clientName)
             .WithWorkspaceContext(sampleWorkspaceId)
-            .Build(); // WorkSpaceContext
+            .Build();
 
         _consoleLogger.PrintCreatingTransfer(jobId, source, destination);
 

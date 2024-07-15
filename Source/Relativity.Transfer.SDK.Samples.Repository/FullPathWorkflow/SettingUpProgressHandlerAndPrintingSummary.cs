@@ -13,10 +13,11 @@ using Relativity.Transfer.SDK.Samples.Core.Authentication;
 using Relativity.Transfer.SDK.Samples.Core.Configuration;
 using Relativity.Transfer.SDK.Samples.Core.Helpers;
 using Relativity.Transfer.SDK.Samples.Core.Runner;
+using Relativity.Transfer.SDK.Samples.Repository.Common;
 
 namespace Relativity.Transfer.SDK.Samples.Repository.FullPathWorkflow;
 
-[Sample(2, "A progress handler",
+[Sample((int)SampleOrder.SettingUpProgressHandlerAndPrintingSummary, "A progress handler",
     "The sample illustrates how to implement a progress handler (statistics and events for files).",
     typeof(SettingUpProgressHandlerAndPrintingSummary),
     TransferType.UploadDirectory)]
