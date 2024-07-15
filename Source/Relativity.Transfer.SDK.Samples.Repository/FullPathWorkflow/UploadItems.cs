@@ -16,16 +16,16 @@ namespace Relativity.Transfer.SDK.Samples.Repository.FullPathWorkflow;
 [Sample(4, 
     "Upload items",
     "The sample illustrates how to implement files upload to a RelativityOne file share. ", 
-    typeof(UploadFiles), 
-    TransferType.UploadFiles)]
-internal class UploadFiles : ISample
+    typeof(UploadItems), 
+    TransferType.UploadItems)]
+internal class UploadItems : ISample
 {
     private readonly IConsoleLogger _consoleLogger;
     private readonly IPathExtension _pathExtension;
     private readonly IRelativityAuthenticationProviderFactory _relativityAuthenticationProviderFactory;
     private readonly IProgressHandlerFactory _progressHandlerFactory;
 
-    public UploadFiles(IConsoleLogger consoleLogger, IPathExtension pathExtension, IRelativityAuthenticationProviderFactory relativityAuthenticationProviderFactory, IProgressHandlerFactory progressHandlerFactory)
+    public UploadItems(IConsoleLogger consoleLogger, IPathExtension pathExtension, IRelativityAuthenticationProviderFactory relativityAuthenticationProviderFactory, IProgressHandlerFactory progressHandlerFactory)
     {
         _consoleLogger = consoleLogger;
         _pathExtension = pathExtension;

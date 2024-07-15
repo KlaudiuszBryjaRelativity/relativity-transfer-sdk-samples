@@ -61,7 +61,7 @@ internal sealed class ConfigurationScreen : IConfigurationScreen
 				return Configuration.Configuration.ForUploadFile(common,
 					new SourceAndDestinationConfiguration(source, destination));
 			
-			case TransferType.UploadFiles:
+			case TransferType.UploadItems:
 				source = AnsiConsole.Ask("Source file", configuration.UploadFile.Source);
 				destination = AnsiConsole.Ask("Destination directory", configuration.UploadFile.Destination);
 				
