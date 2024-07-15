@@ -57,6 +57,7 @@ internal class UploadDirectoryWithExclusionPolicy : ISample
         var transferClient = TransferClientBuilder.FullPathWorkflow
             .WithAuthentication(authenticationProvider)
             .WithClientName(clientName)
+            .WithStagingExplorerContext()
             .Build();
 
         // An exclusion policy implementation should be assigned to a transfer options.

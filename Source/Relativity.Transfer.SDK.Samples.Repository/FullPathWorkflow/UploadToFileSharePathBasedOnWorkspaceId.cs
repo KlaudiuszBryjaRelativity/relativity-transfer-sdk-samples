@@ -66,12 +66,15 @@ internal class UploadToFileSharePathBasedOnWorkspaceId : ISample
         var destination = _pathExtension.GetDestinationDirectoryPathByFileShareInfo(fileShareInfo.UncPath,
             configuration.Common.FileShareRelativePath, jobId);
 
+        const int sampleWorkspaceId = 1;
+
         // The builder follows the Fluent convention, and more options will be added in the future. The only required component (besides the client name)
         // is the authentication provider - a provided one that utilizes an OAuth-based approach has been provided, but the custom implementation can be created.
         var transferClient = TransferClientBuilder.FullPathWorkflow
             .WithAuthentication(authenticationProvider)
             .WithClientName(clientName)
-            .Build();
+            .WithWorkspaceContext(sampleWorkspaceId)
+            .Build(); // WorkSpaceContext
 
         _consoleLogger.PrintCreatingTransfer(jobId, source, destination);
 

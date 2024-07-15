@@ -51,6 +51,7 @@ internal class BearerTokenAuthentication : ISample
 		var transferClient = TransferClientBuilder.FullPathWorkflow
 			.WithAuthentication(authenticationProvider)
 			.WithClientName(clientName)
+			.WithStagingExplorerContext()// Staging 
 			.Build();
 
 		_consoleLogger.PrintCreatingTransfer(jobId, source, destination);

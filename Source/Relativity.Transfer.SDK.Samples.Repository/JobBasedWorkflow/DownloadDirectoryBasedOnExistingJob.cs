@@ -52,6 +52,7 @@ internal class DownloadDirectoryBasedOnExistingJob : ISample
 		var transferFullPathClient = TransferClientBuilder.FullPathWorkflow
 			.WithAuthentication(authenticationProvider)
 			.WithClientName(clientName)
+			.WithStagingExplorerContext()
 			.Build();
 
 		_consoleLogger.PrintCreatingTransfer(uploadJobId, uploadSource, uploadDestination);
@@ -74,6 +75,7 @@ internal class DownloadDirectoryBasedOnExistingJob : ISample
 		var transferJobClient = TransferClientBuilder.JobBasedWorkflow
 			.WithAuthentication(authenticationProvider)
 			.WithClientName(clientName)
+			.WithStagingExplorerContext()
 			.Build();
 
 		_consoleLogger.PrintCreatingTransfer(downloadJobId, uploadSource, downloadDestination);

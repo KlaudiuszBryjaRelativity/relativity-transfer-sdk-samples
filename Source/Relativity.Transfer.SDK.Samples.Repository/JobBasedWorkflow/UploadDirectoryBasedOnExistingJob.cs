@@ -57,6 +57,7 @@ internal class UploadDirectoryBasedOnExistingJob : ISample
 		var transferClient = TransferClientBuilder.JobBasedWorkflow
 			.WithAuthentication(authenticationProvider)
 			.WithClientName(clientName)
+			.WithStagingExplorerContext()
 			.Build();
 
 		_consoleLogger.PrintCreatingTransfer(firstJobId, firstSource, destination);
