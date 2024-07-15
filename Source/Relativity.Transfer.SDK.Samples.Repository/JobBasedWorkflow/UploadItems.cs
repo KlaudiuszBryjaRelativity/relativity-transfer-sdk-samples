@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using Relativity.Transfer.SDK.Interfaces.Authentication;
 using Relativity.Transfer.SDK.Interfaces.Paths;
 using Relativity.Transfer.SDK.Samples.Core.Attributes;
 using Relativity.Transfer.SDK.Samples.Core.Authentication;
@@ -18,7 +19,7 @@ namespace Relativity.Transfer.SDK.Samples.Repository.JobBasedWorkflow;
     "Upload items by workspace id (using the job based workflow)",
     "The sample illustrates how to implement files upload (using the job based workflow) to a RelativityOne file share. ", 
     typeof(UploadItems), 
-    TransferType.UploadItemsByWorkspaceId)]
+    TransferType.UploadItems)]
 internal class UploadItems : ISample
 {
     private readonly IConsoleLogger _consoleLogger;
@@ -44,6 +45,8 @@ internal class UploadItems : ISample
             : new DirectoryPath(configuration.UploadFile.Destination);
         var authenticationProvider = _relativityAuthenticationProviderFactory.Create(configuration.Common);
         var progressHandler = _progressHandlerFactory.Create();
+        
+        await RegisterUploadDirectoryJobAsync(authenticationProvider, jobId, destination).ConfigureAwait(false);
         
         // The builder follows the Fluent convention, and more options will be added in the future. The only required component (besides the client name)
         // is the authentication provider - a provided one that utilizes an OAuth-based approach has been provided, but the custom implementation can be created.
@@ -89,5 +92,14 @@ internal class UploadItems : ISample
             
             yield return transferEntity;
         }
+    }
+    
+    private async Task RegisterUploadDirectoryJobAsync(IRelativityAuthenticationProvider authenticationProvider,
+        Guid jobId, DirectoryPath destination)
+    {
+        _consoleLogger.PrintRegisteringTransferJob(jobId, destination: destination);
+
+        var jobBuilder = new TransferJobBuilder(authenticationProvider);
+        await jobBuilder.NewJob().CreateUploadDirectoryJobAsync(jobId, destination).ConfigureAwait(false);
     }
 }

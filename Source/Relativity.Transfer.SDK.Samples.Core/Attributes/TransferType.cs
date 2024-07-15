@@ -8,7 +8,6 @@ internal enum TransferType
 	UploadItems,
 	DownloadDirectory,
 	DownloadFile,
-	UploadItemsByWorkspaceId,
 	UploadDirectoryByWorkspaceId,
 	UploadDirectoryBasedOnExistingJob,
 	DownloadDirectoryBasedOnExistingJob

@@ -18,3 +18,5 @@ public enum SampleOrder
     DownloadDirectoryJobBasedWorkflow,
     DownloadDirectoryBasedOnExistingJob,
 }
+
+// represents the arrangement in the menu
