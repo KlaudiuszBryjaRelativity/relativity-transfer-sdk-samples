@@ -1,6 +1,6 @@
 ﻿namespace Relativity.Transfer.SDK.Samples.Core.Attributes;
 
-public enum SampleOrder
+internal enum SampleOrder
 {
     BearerTokenAuthentication,
     SettingUpProgressHandlerAndPrintingSummary,

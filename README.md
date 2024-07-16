@@ -5,10 +5,10 @@
 This project showcases a straightforward integration scenario with `Relativity.Transfer.SDK` (a.k.a `TransferSDK`) NuGet package.
 
 #### `TransferSDK` lets you:
-- Upload a single directory, file or files to the selected destination in the RelativityOne fileshare
+- Upload a single directory, file or list of items to the selected destination in the RelativityOne fileshare
 - Download a single directory or file from the selected source in the RelativityOne fileshare
 - Upload a directory (using an existing job based destination path) to the RelativityOne fileshare
-- Upload list of items using a csv file with paths inside (max 5) [example](#file-for-items-example), (using an existing job based destination path) to the RelativityOne fileshare
+- Upload list of items (using an existing job based destination path) to the RelativityOne fileshare
 - Download a directory (using an existing job based source path) from the RelativityOne fileshare
 - Track the overall progress of the transfer
 - Track the progress of individual items that have been transferred, failed, or skipped
@@ -16,7 +16,7 @@ This project showcases a straightforward integration scenario with `Relativity.T
 - Setup one of three predefined retry policies - No Retry, Linear, Exponential 
 - Assing an exclusion policy to filter out unwanted files
 
-## File for items example
+## A sample list of items source file used in above examples:
 ```
 <source path>;<relative destination path>
 <source path>;<relative destination path>
