@@ -7,11 +7,10 @@ using Relativity.Transfer.SDK.Samples.Core.Configuration;
 using Relativity.Transfer.SDK.Samples.Core.Helpers;
 using Relativity.Transfer.SDK.Samples.Core.ProgressHandler;
 using Relativity.Transfer.SDK.Samples.Core.Runner;
-using Relativity.Transfer.SDK.Samples.Repository.Common;
 
 namespace Relativity.Transfer.SDK.Samples.Repository.FullPathWorkflow;
 
-[Sample((int)SampleOrder.DownloadDirectory, "Download a directory",
+[Sample(SampleOrder.DownloadDirectory, "Download a directory",
     "The sample illustrates how to implement a directory download from a RelativityOne file share.",
     typeof(DownloadDirectory),
     TransferType.DownloadDirectory)]

@@ -11,11 +11,10 @@ using Relativity.Transfer.SDK.Samples.Core.Configuration;
 using Relativity.Transfer.SDK.Samples.Core.Helpers;
 using Relativity.Transfer.SDK.Samples.Core.ProgressHandler;
 using Relativity.Transfer.SDK.Samples.Core.Runner;
-using Relativity.Transfer.SDK.Samples.Repository.Common;
 
 namespace Relativity.Transfer.SDK.Samples.Repository.JobBasedWorkflow;
 
-[Sample((int)SampleOrder.UploadItemsJobBasedWorkflow, 
+[Sample(SampleOrder.UploadItemsJobBasedWorkflow, 
     "Upload items by workspace id (using the job based workflow)",
     "The sample illustrates how to implement files upload (using the job based workflow) to a RelativityOne file share. ", 
     typeof(UploadItems), 

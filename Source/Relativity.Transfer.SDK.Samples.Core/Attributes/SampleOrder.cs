@@ -1,4 +1,4 @@
-﻿namespace Relativity.Transfer.SDK.Samples.Repository.Common;
+﻿namespace Relativity.Transfer.SDK.Samples.Core.Attributes;
 
 public enum SampleOrder
 {

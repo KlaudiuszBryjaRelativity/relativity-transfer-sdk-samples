@@ -6,9 +6,9 @@ namespace Relativity.Transfer.SDK.Samples.Core.Attributes;
 internal sealed class SampleAttribute : Attribute, IEquatable<SampleAttribute>
 {
 	internal static readonly SampleAttribute ExitOptionAttribute =
-		new(int.MaxValue, "Exit", "Options allows to exit application.", null, TransferType.Default);
+		new(0, "Exit", "Options allows to exit application.", null, TransferType.Default);
 
-	public SampleAttribute(int order,
+	public SampleAttribute(SampleOrder order,
 		string menuCaption,
 		string sampleDescription,
 		Type sampleType,
@@ -21,7 +21,7 @@ internal sealed class SampleAttribute : Attribute, IEquatable<SampleAttribute>
 		TransferType = transferType;
 	}
 
-	public int Order { get; }
+	internal readonly SampleOrder Order;
 	public string MenuCaption { get; }
 	public string SampleDescription { get; }
 	public Type SampleType { get; }

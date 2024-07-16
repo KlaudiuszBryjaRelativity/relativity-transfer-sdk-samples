@@ -12,7 +12,6 @@ using Relativity.Transfer.SDK.Samples.Core.Authentication.Credentials;
 using Relativity.Transfer.SDK.Samples.Core.Configuration;
 using Relativity.Transfer.SDK.Samples.Core.Helpers;
 using Relativity.Transfer.SDK.Samples.Core.Runner;
-using Relativity.Transfer.SDK.Samples.Repository.Common;
 
 namespace Relativity.Transfer.SDK.Samples.Repository.FullPathWorkflow;
 

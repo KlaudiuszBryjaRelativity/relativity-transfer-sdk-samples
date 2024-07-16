@@ -7,11 +7,10 @@ using Relativity.Transfer.SDK.Samples.Core.Configuration;
 using Relativity.Transfer.SDK.Samples.Core.Helpers;
 using Relativity.Transfer.SDK.Samples.Core.ProgressHandler;
 using Relativity.Transfer.SDK.Samples.Core.Runner;
-using Relativity.Transfer.SDK.Samples.Repository.Common;
 
 namespace Relativity.Transfer.SDK.Samples.Repository.FullPathWorkflow;
 
-[Sample((int)SampleOrder.UploadFile, "Upload a file",
+[Sample(SampleOrder.UploadFile, "Upload a file",
     "The sample illustrates how to implement a file upload to a RelativityOne file share.",
     typeof(UploadFile),
     TransferType.UploadFile)]

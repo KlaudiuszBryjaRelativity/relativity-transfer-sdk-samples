@@ -5,10 +5,10 @@
 This project showcases a straightforward integration scenario with `Relativity.Transfer.SDK` (a.k.a `TransferSDK`) NuGet package.
 
 #### `TransferSDK` lets you:
-- Upload a single directory, file or files to the selected destination in RelativityOne fileshare
-- Download a single directory or file from the selected source in RelativityOne fileshare
+- Upload a single directory, file or files to the selected destination in the RelativityOne fileshare
+- Download a single directory or file from the selected source in the RelativityOne fileshare
 - Upload a directory (using an existing job based destination path) to the RelativityOne fileshare
-- Upload files by txt file with paths inside (max 5) [example](#file-for-items-example), (using an existing job based destination path) to the RelativityOne fileshare
+- Upload list of items using a csv file with paths inside (max 5) [example](#file-for-items-example), (using an existing job based destination path) to the RelativityOne fileshare
 - Download a directory (using an existing job based source path) from the RelativityOne fileshare
 - Track the overall progress of the transfer
 - Track the progress of individual items that have been transferred, failed, or skipped
@@ -60,7 +60,7 @@ The repository contains 3 projects:
 | DownloadDirectoryBasedOnExistingJob        | DownloadDirectoryBasedOnExistingJob | [DownloadDirectoryBasedOnExistingJob](https://github.com/relativitydev/relativity-transfer-sdk-samples/blob/main/Source/Relativity.Transfer.SDK.Samples.Repository/JobBasedWorkflow/DownloadDirectoryBasedOnExistingJob.cs)               |
 | UploadDirectory                            | UploadDirectory                     | [UploadDirectory](https://github.com/relativitydev/relativity-transfer-sdk-samples/blob/main/Source/Relativity.Transfer.SDK.Samples.Repository/JobBasedWorkflow/UploadDirectory.cs)                                                       |
 | UploadDirectoryBasedOnExistingJob          | UploadDirectoryBasedOnExistingJob   | [UploadDirectoryBasedOnExistingJob](https://github.com/relativitydev/relativity-transfer-sdk-samples/blob/main/Source/Relativity.Transfer.SDK.Samples.Repository/JobBasedWorkflow/UploadDirectoryBasedOnExistingJob.cs)                   |
-| UploadItems                                | UploadFile                          | [UploadDirectory](https://github.com/relativitydev/relativity-transfer-sdk-samples/blob/main/Source/Relativity.Transfer.SDK.Samples.Repository/JobBasedWorkflow/UploadDirectory.cs)                                                       |
+| UploadItems                                | UploadFile                          | [UploadDirectory](https://github.com/relativitydev/relativity-transfer-sdk-samples/blob/main/Source/Relativity.Transfer.SDK.Samples.Repository/JobBasedWorkflow/UploadItems.cs)                                                           |
 
 ## Running the sample
 
