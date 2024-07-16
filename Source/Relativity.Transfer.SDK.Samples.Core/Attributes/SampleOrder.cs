@@ -16,7 +16,7 @@ internal enum SampleOrder
     UploadDirectoryJobBasedWorkflow,
     UploadDirectoryBasedOnExistingJob,
     DownloadDirectoryJobBasedWorkflow,
-    DownloadDirectoryBasedOnExistingJob,
+    DownloadDirectoryBasedOnExistingJob
 }
 
 // represents the arrangement in the menu
