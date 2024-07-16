@@ -6,6 +6,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<PackageReference Include="System.Linq.Async" Version="6.0.1" />
 		<ProjectReference Include="..\Relativity.Transfer.SDK.Samples.Core\Relativity.Transfer.SDK.Samples.Core.csproj" />
 	</ItemGroup>
 

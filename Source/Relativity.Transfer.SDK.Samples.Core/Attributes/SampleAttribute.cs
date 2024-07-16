@@ -6,7 +6,7 @@ namespace Relativity.Transfer.SDK.Samples.Core.Attributes;
 internal sealed class SampleAttribute : Attribute, IEquatable<SampleAttribute>
 {
 	internal static readonly SampleAttribute ExitOptionAttribute =
-		new(0, "Exit", "Options allows to exit application.", null, TransferType.Default);
+		new(SampleOrder.Exit, "Exit", "Options allows to exit application.", null, TransferType.Default);
 
 	public SampleAttribute(SampleOrder order,
 		string menuCaption,
