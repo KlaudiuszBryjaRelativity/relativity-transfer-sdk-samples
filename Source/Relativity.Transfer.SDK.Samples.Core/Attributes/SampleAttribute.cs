@@ -14,14 +14,14 @@ internal sealed class SampleAttribute : Attribute, IEquatable<SampleAttribute>
 		Type sampleType,
 		TransferType transferType)
 	{
-		Order = order;
+		Order = (int)order;
 		MenuCaption = menuCaption;
 		SampleDescription = sampleDescription;
 		SampleType = sampleType;
 		TransferType = transferType;
 	}
 
-	internal readonly SampleOrder Order;
+	public int Order { get; }
 	public string MenuCaption { get; }
 	public string SampleDescription { get; }
 	public Type SampleType { get; }
