@@ -15,7 +15,7 @@ using Relativity.Transfer.SDK.Samples.Core.Runner;
 namespace Relativity.Transfer.SDK.Samples.Repository.JobBasedWorkflow;
 
 [Sample(SampleOrder.UploadItemsJobBasedWorkflow, 
-    "Upload items by workspace id (using the job based workflow)",
+    "Upload items (using the job based workflow)",
     "The sample illustrates how to implement files upload (using the job based workflow) to a RelativityOne file share. ", 
     typeof(UploadItems), 
     TransferType.UploadItems)]
