@@ -19,7 +19,7 @@ using Relativity.Transfer.SDK.Samples.Core.UI;
 
 namespace Relativity.Transfer.SDK.Samples.Repository.FullPathWorkflow;
 
-[Sample(5, "A transfer based on a WorkspaceId",
+[Sample(SampleOrder.UploadToFileSharePathBasedOnWorkspaceId, "A transfer based on a WorkspaceId",
     "The sample illustrates the implementation of a transfer based on a WorkspaceId.",
     typeof(UploadToFileSharePathBasedOnWorkspaceId),
     TransferType.UploadDirectoryByWorkspaceId)]
@@ -66,11 +66,14 @@ internal class UploadToFileSharePathBasedOnWorkspaceId : ISample
         var destination = _pathExtension.GetDestinationDirectoryPathByFileShareInfo(fileShareInfo.UncPath,
             configuration.Common.FileShareRelativePath, jobId);
 
+        const int sampleWorkspaceId = 1;
+
         // The builder follows the Fluent convention, and more options will be added in the future. The only required component (besides the client name)
         // is the authentication provider - a provided one that utilizes an OAuth-based approach has been provided, but the custom implementation can be created.
         var transferClient = TransferClientBuilder.FullPathWorkflow
             .WithAuthentication(authenticationProvider)
             .WithClientName(clientName)
+            .WithWorkspaceContext(sampleWorkspaceId)
             .Build();
 
         _consoleLogger.PrintCreatingTransfer(jobId, source, destination);

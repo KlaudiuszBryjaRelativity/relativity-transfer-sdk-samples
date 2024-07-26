@@ -10,7 +10,7 @@ using Relativity.Transfer.SDK.Samples.Core.Runner;
 
 namespace Relativity.Transfer.SDK.Samples.Repository.FullPathWorkflow;
 
-[Sample(8, "Download a file",
+[Sample(SampleOrder.DownloadFile, "Download a file",
     "The sample illustrates how to implement a file download from a RelativityOne file share.",
     typeof(DownloadFile),
     TransferType.DownloadFile)]
@@ -46,6 +46,7 @@ internal class DownloadFile : ISample
         var transferClient = TransferClientBuilder.FullPathWorkflow
             .WithAuthentication(authenticationProvider)
             .WithClientName(clientName)
+            .WithStagingExplorerContext()
             .Build();
 
         _consoleLogger.PrintCreatingTransfer(jobId, source, destination);

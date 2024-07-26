@@ -16,7 +16,7 @@ using Relativity.Transfer.SDK.Samples.Core.Runner;
 
 namespace Relativity.Transfer.SDK.Samples.Repository.FullPathWorkflow;
 
-[Sample(2, "A progress handler",
+[Sample(SampleOrder.SettingUpProgressHandlerAndPrintingSummary, "A progress handler",
     "The sample illustrates how to implement a progress handler (statistics and events for files).",
     typeof(SettingUpProgressHandlerAndPrintingSummary),
     TransferType.UploadDirectory)]
@@ -55,6 +55,7 @@ internal class SettingUpProgressHandlerAndPrintingSummary : ISample
         var transferClient = TransferClientBuilder.FullPathWorkflow
             .WithAuthentication(authenticationProvider)
             .WithClientName(clientName)
+            .WithStagingExplorerContext()
             .Build();
 
         _consoleLogger.PrintCreatingTransfer(jobId, source, destination, additionalLine);

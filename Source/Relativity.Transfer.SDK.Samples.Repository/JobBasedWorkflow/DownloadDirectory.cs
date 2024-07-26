@@ -12,7 +12,7 @@ using Relativity.Transfer.SDK.Samples.Core.Runner;
 
 namespace Relativity.Transfer.SDK.Samples.Repository.JobBasedWorkflow;
 
-[Sample(12, "Download a directory (using the job based workflow)",
+[Sample(SampleOrder.DownloadDirectoryJobBasedWorkflow, "Download a directory (using the job based workflow)",
 	"The sample illustrates how to implement a directory download (using the job based workflow) from a RelativityOne file share.",
 	typeof(DownloadDirectory),
 	TransferType.DownloadDirectory)]
@@ -53,6 +53,7 @@ internal sealed class DownloadDirectory : ISample
 		var transferClient = TransferClientBuilder.JobBasedWorkflow
 			.WithAuthentication(authenticationProvider)
 			.WithClientName(clientName)
+			.WithStagingExplorerContext()
 			.Build();
 
 		_consoleLogger.PrintCreatingTransfer(jobId, source, destination);

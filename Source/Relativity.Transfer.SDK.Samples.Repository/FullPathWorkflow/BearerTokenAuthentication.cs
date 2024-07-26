@@ -15,7 +15,7 @@ using Relativity.Transfer.SDK.Samples.Core.Runner;
 
 namespace Relativity.Transfer.SDK.Samples.Repository.FullPathWorkflow;
 
-[Sample(1, "A bearer token authentication",
+[Sample(SampleOrder.BearerTokenAuthentication, "A bearer token authentication",
 	"The sample illustrates how to implement a bearer token authentication in RelativityOne.",
 	typeof(BearerTokenAuthentication),
 	TransferType.UploadFile)]
@@ -51,6 +51,7 @@ internal class BearerTokenAuthentication : ISample
 		var transferClient = TransferClientBuilder.FullPathWorkflow
 			.WithAuthentication(authenticationProvider)
 			.WithClientName(clientName)
+			.WithStagingExplorerContext()
 			.Build();
 
 		_consoleLogger.PrintCreatingTransfer(jobId, source, destination);

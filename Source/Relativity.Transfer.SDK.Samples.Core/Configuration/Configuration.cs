@@ -53,6 +53,19 @@ internal record Configuration(
 			new SourceAndTwoDestinationsConfiguration(string.Empty, string.Empty, string.Empty));
 	}
 
+	internal static Configuration ForUploadItems(CommonConfiguration common,
+		SourceAndDestinationConfiguration uploadsInfoFile)
+	{
+		return new Configuration(common,
+			uploadsInfoFile,
+			new SourceAndDestinationConfiguration(string.Empty, string.Empty),
+			new SourceAndDestinationConfiguration(string.Empty, string.Empty),
+			new SourceAndDestinationConfiguration(string.Empty, string.Empty),
+			new SourceAndWorkspaceIdConfiguration(string.Empty, -1),
+			new TwoSourcesAndDestinationConfiguration(string.Empty, string.Empty, string.Empty),
+			new SourceAndTwoDestinationsConfiguration(string.Empty, string.Empty, string.Empty));
+	}
+
 	internal static Configuration ForDownloadDirectory(CommonConfiguration common,
 		SourceAndDestinationConfiguration downloadDirectory)
 	{

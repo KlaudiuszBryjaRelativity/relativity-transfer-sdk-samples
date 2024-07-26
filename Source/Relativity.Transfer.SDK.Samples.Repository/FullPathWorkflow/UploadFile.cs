@@ -10,7 +10,7 @@ using Relativity.Transfer.SDK.Samples.Core.Runner;
 
 namespace Relativity.Transfer.SDK.Samples.Repository.FullPathWorkflow;
 
-[Sample(3, "Upload a file",
+[Sample(SampleOrder.UploadFile, "Upload a file",
     "The sample illustrates how to implement a file upload to a RelativityOne file share.",
     typeof(UploadFile),
     TransferType.UploadFile)]
@@ -48,6 +48,7 @@ internal class UploadFile : ISample
         var transferClient = TransferClientBuilder.FullPathWorkflow
             .WithAuthentication(authenticationProvider)
             .WithClientName(clientName)
+            .WithStagingExplorerContext()
             .Build();
 
         _consoleLogger.PrintCreatingTransfer(jobId, source, destination);

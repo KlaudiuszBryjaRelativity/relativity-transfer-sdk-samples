@@ -13,7 +13,7 @@ using Relativity.Transfer.SDK.Samples.Core.Runner;
 
 namespace Relativity.Transfer.SDK.Samples.Repository.FullPathWorkflow;
 
-[Sample(5, "A retry policy",
+[Sample(SampleOrder.UploadDirectoryWithCustomizedRetryPolicy, "A retry policy",
     "The sample illustrates the implementation of a retry policy to enhance the resilience of a transfer.",
     typeof(UploadDirectoryWithCustomizedRetryPolicy),
     TransferType.UploadDirectory)]
@@ -51,6 +51,7 @@ internal class UploadDirectoryWithCustomizedRetryPolicy : ISample
         var transferClient = TransferClientBuilder.FullPathWorkflow
             .WithAuthentication(authenticationProvider)
             .WithClientName(clientName)
+            .WithStagingExplorerContext()
             .Build();
 
         _consoleLogger.PrintCreatingTransfer(jobId, source, destination);

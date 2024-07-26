@@ -16,7 +16,7 @@ using Relativity.Transfer.SDK.Samples.Core.Runner;
 
 namespace Relativity.Transfer.SDK.Samples.Repository.FullPathWorkflow;
 
-[Sample(6, "An exclusion policy",
+[Sample(SampleOrder.UploadDirectoryWithExclusionPolicy, "An exclusion policy",
     "The sample illustrates the implementation of an exclusion policy.",
     typeof(UploadDirectoryWithExclusionPolicy),
     TransferType.UploadDirectory)]
@@ -57,6 +57,7 @@ internal class UploadDirectoryWithExclusionPolicy : ISample
         var transferClient = TransferClientBuilder.FullPathWorkflow
             .WithAuthentication(authenticationProvider)
             .WithClientName(clientName)
+            .WithStagingExplorerContext()
             .Build();
 
         // An exclusion policy implementation should be assigned to a transfer options.

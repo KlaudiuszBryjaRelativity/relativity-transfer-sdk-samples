@@ -5,15 +5,24 @@
 This project showcases a straightforward integration scenario with `Relativity.Transfer.SDK` (a.k.a `TransferSDK`) NuGet package.
 
 #### `TransferSDK` lets you:
-- Upload a single directory or file to the selected destination in RelativityOne fileshare
-- Download a single directory or file from the selected source in RelativityOne fileshare
+- Upload a single directory, file or list of items to the selected destination in the RelativityOne fileshare
+- Download a single directory or file from the selected source in the RelativityOne fileshare
 - Upload a directory (using an existing job based destination path) to the RelativityOne fileshare
+- Upload list of items (using an existing job based destination path) to the RelativityOne fileshare
 - Download a directory (using an existing job based source path) from the RelativityOne fileshare
 - Track the overall progress of the transfer
 - Track the progress of individual items that have been transferred, failed, or skipped
 - Get a detailed transfer report
 - Setup one of three predefined retry policies - No Retry, Linear, Exponential 
 - Assing an exclusion policy to filter out unwanted files
+
+## A sample list of items source file used in above examples:
+```
+<source path>;<relative destination path>
+<source path>;<relative destination path>
+...
+<source path>;<relative destination path>
+```
 
 The library supports `.NETStandard 2.0`, which means it is cross-platform. You can run it on Windows or Linux!
 
@@ -44,12 +53,14 @@ The repository contains 3 projects:
 | UploadDirectoryWithCustomizedRetryPolicy   | UploadDirectory                     | [UploadDirectoryWithCustomizedRetryPolicy](https://github.com/relativitydev/relativity-transfer-sdk-samples/blob/main/Source/Relativity.Transfer.SDK.Samples.Repository/FullPathWorkflow/UploadDirectoryWithCustomizedRetryPolicy.cs)     |
 | UploadDirectoryWithExclusionPolicy         | UploadDirectory                     | [UploadDirectoryWithExclusionPolicy](https://github.com/relativitydev/relativity-transfer-sdk-samples/blob/main/Source/Relativity.Transfer.SDK.Samples.Repository/FullPathWorkflow/UploadDirectoryWithExclusionPolicy.cs)                 |
 | UploadFile                                 | UploadFile                          | [UploadFile](https://github.com/relativitydev/relativity-transfer-sdk-samples/blob/main/Source/Relativity.Transfer.SDK.Samples.Repository/FullPathWorkflow/UploadFile.cs)                                                                 |
+| UploadItems                                | UploadFile                          | [UploadItems](https://github.com/relativitydev/relativity-transfer-sdk-samples/blob/main/Source/Relativity.Transfer.SDK.Samples.Repository/FullPathWorkflow/UploadItems.cs)                                                               |
 | UploadToFilesharePathBasedOnWorkspaceId    | UploadDirectoryByWorkspaceId        | [UploadToFilesharePathBasedOnWorkspaceId](https://github.com/relativitydev/relativity-transfer-sdk-samples/blob/main/Source/Relativity.Transfer.SDK.Samples.Repository/FullPathWorkflow/UploadToFileSharePathBasedOnWorkspaceId.cs)       |
 | ___JobBasedWorkflow___                     |                                     |                                                                                                                                                                                                                                           |
 | DownloadDirectory                          | DownloadDirectory                   | [DownloadDirectory](https://github.com/relativitydev/relativity-transfer-sdk-samples/blob/main/Source/Relativity.Transfer.SDK.Samples.Repository/JobBasedWorkflow/DownloadDirectory.cs)                                                   |
 | DownloadDirectoryBasedOnExistingJob        | DownloadDirectoryBasedOnExistingJob | [DownloadDirectoryBasedOnExistingJob](https://github.com/relativitydev/relativity-transfer-sdk-samples/blob/main/Source/Relativity.Transfer.SDK.Samples.Repository/JobBasedWorkflow/DownloadDirectoryBasedOnExistingJob.cs)               |
 | UploadDirectory                            | UploadDirectory                     | [UploadDirectory](https://github.com/relativitydev/relativity-transfer-sdk-samples/blob/main/Source/Relativity.Transfer.SDK.Samples.Repository/JobBasedWorkflow/UploadDirectory.cs)                                                       |
 | UploadDirectoryBasedOnExistingJob          | UploadDirectoryBasedOnExistingJob   | [UploadDirectoryBasedOnExistingJob](https://github.com/relativitydev/relativity-transfer-sdk-samples/blob/main/Source/Relativity.Transfer.SDK.Samples.Repository/JobBasedWorkflow/UploadDirectoryBasedOnExistingJob.cs)                   |
+| UploadItems                                | UploadFile                          | [UploadDirectory](https://github.com/relativitydev/relativity-transfer-sdk-samples/blob/main/Source/Relativity.Transfer.SDK.Samples.Repository/JobBasedWorkflow/UploadItems.cs)                                                           |
 
 ## Running the sample
 
@@ -79,12 +90,14 @@ The repository contains 3 projects:
 var transferClient = TransferClientBuilder.FullPathWorkflow
     .WithAuthentication(authenticationProvider)
     .WithClientName(clientName)
+    .WithStagingExplorerContext() // or .WithWorkspaceContext(sampleWorkspaceId) if you base on workspace is
     .Build();
 
 // or JobBasedWorkflow
 var transferClient = TransferClientBuilder.JobBasedWorkflow
     .WithAuthentication(authenticationProvider)
     .WithClientName(clientName)
+    .WithStagingExplorerContext()
     .Build();
 ```
 
