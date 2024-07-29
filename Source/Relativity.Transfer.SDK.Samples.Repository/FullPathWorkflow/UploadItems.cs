@@ -79,7 +79,7 @@ internal class UploadItems : ISample
             var paths = line.Split(';');
             if (paths.Length != 2)
             {
-                _consoleLogger.Info($"[red]Invalid parameters in {i} line");
+                _consoleLogger.Info($"[red]Invalid parameters in {i} line[/]");
                 continue;
             }
 
