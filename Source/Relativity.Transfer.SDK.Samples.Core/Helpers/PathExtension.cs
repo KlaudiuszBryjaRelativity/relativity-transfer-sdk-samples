@@ -2,13 +2,19 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Relativity.Transfer.SDK.Samples.Core.Configuration;
+using System.Text.RegularExpressions;
 using Relativity.Transfer.SDK.Interfaces.Paths;
+using Relativity.Transfer.SDK.Samples.Core.Configuration;
+using Relativity.Transfer.SDK.Samples.Core.DTOs;
 
 namespace Relativity.Transfer.SDK.Samples.Core.Helpers;
 
 internal sealed class PathExtension : IPathExtension
 {
+	private static readonly Regex RootUncPathRegex =
+		new(@"(?<root>[\\]{2}files\d*[.]T\d{3}[.][A-Za-z]{4}\d*.*[\\]T\d{3}[A-Za-z]*)",
+			RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
 	public DirectoryPath GetDefaultRemoteDirectoryPathForUpload(CommonConfiguration common)
 	{
 		return new DirectoryPath(GetDefaultRemoteDirectoryPathForUploadAsString(common));
@@ -42,10 +48,17 @@ internal sealed class PathExtension : IPathExtension
 		return Path.Combine(common.FileShareRoot, common.FileShareRelativePath);
 	}
 
-	public DirectoryPath GetDestinationDirectoryPathByFileShareInfo(string fileShareRootPath,
+	public DirectoryPath GetDestinationDirectoryPathByFileShareInfo(FileShareInfo fileShareInfo,
 		string fileShareRelativePath, Guid jobId)
 	{
+		var fileShareRootPath = GetFileShareRootPath(fileShareInfo.UncPath);
+
 		return new DirectoryPath(Path.Combine(fileShareRootPath, fileShareRelativePath, jobId.ToString()));
+	}
+
+	public string GetFileShareRootPath(string uncPath)
+	{
+		return RootUncPathRegex.Match(uncPath).Groups["root"].Value;
 	}
 
 	public DirectoryPath CreateTemporaryDirectoryWithFiles(Guid jobId)
@@ -86,7 +99,7 @@ internal sealed class PathExtension : IPathExtension
 		return path;
 	}
 
-	internal static void CreateSmallFiles(string directoryName, IEnumerable<string> fileNames)
+	private static void CreateSmallFiles(string directoryName, IEnumerable<string> fileNames)
 	{
 		var path = Path.Combine(EnsureRootDirectoryForFiles(), directoryName);
 		if (!Directory.Exists(path)) Directory.CreateDirectory(path);
@@ -99,7 +112,7 @@ internal sealed class PathExtension : IPathExtension
 		}
 	}
 
-	internal static void CreateLargeFiles(string directoryName, IEnumerable<string> fileNames, long fileSizeInMiB)
+	private static void CreateLargeFiles(string directoryName, IEnumerable<string> fileNames, long fileSizeInMiB)
 	{
 		var path = Path.Combine(EnsureRootDirectoryForFiles(), directoryName);
 		if (!Directory.Exists(path)) Directory.CreateDirectory(path);
@@ -122,7 +135,7 @@ internal sealed class PathExtension : IPathExtension
 		}
 	}
 
-	internal static string CreateFile(string fileName)
+	private static string CreateFile(string fileName)
 	{
 		var sampleFile = Path.Combine(Path.GetTempPath(), fileName);
 		using var sw = File.CreateText(sampleFile);

@@ -56,24 +56,21 @@ internal class UploadToFileSharePathBasedOnWorkspaceId : ISample
         var progressHandler = _progressHandlerFactory.Create();
 
         // Get list of file shares by workspace ID. The association is based on Resource Pool assigned to the workspace.
-        var fileSharesRetriever = new WorkspaceFileSharesRetriever(configuration, _bearerTokenRetriever);
+        var fileSharesRetriever = new WorkspaceFileSharesRetriever(configuration, _bearerTokenRetriever, _pathExtension);
         var fileShareInfos = await fileSharesRetriever.GetWorkspaceFileSharesAsync().ConfigureAwait(false);
         var fileShareInfo = _fileShareSelectorMenu.SelectFileShare(fileShareInfos, token);
 
         if (fileShareInfo == null) return;
 
         // Build a destination path based on the selected file share (its UNC path).
-        var destination = _pathExtension.GetDestinationDirectoryPathByFileShareInfo(fileShareInfo.UncPath,
-            configuration.Common.FileShareRelativePath, jobId);
-
-        const int sampleWorkspaceId = 1;
+        var destination = _pathExtension.GetDestinationDirectoryPathByFileShareInfo(fileShareInfo, configuration.Common.FileShareRelativePath, jobId);
 
         // The builder follows the Fluent convention, and more options will be added in the future. The only required component (besides the client name)
         // is the authentication provider - a provided one that utilizes an OAuth-based approach has been provided, but the custom implementation can be created.
         var transferClient = TransferClientBuilder.FullPathWorkflow
             .WithAuthentication(authenticationProvider)
             .WithClientName(clientName)
-            .WithWorkspaceContext(sampleWorkspaceId)
+            .WithWorkspaceContext(configuration.UploadDirectoryByWorkspaceId.WorkspaceId)
             .Build();
 
         _consoleLogger.PrintCreatingTransfer(jobId, source, destination);
@@ -101,15 +98,18 @@ internal class UploadToFileSharePathBasedOnWorkspaceId : ISample
         private readonly Uri _baseUri;
         private readonly Configuration _configuration;
         private readonly IBearerTokenRetriever _bearerTokenRetriever1;
+        private readonly IPathExtension _pathExtension;
 
         /// <summary>
         ///     Helper class to retrieve file shares by workspace ID.
         /// </summary>
         public WorkspaceFileSharesRetriever(Configuration configuration,
-	        IBearerTokenRetriever bearerTokenRetriever)
+	        IBearerTokenRetriever bearerTokenRetriever,
+	        IPathExtension pathExtension)
         {
 	        _configuration = configuration;
 	        _bearerTokenRetriever1 = bearerTokenRetriever;
+	        _pathExtension = pathExtension;
 	        _baseUri = new(new Uri(configuration.Common.InstanceUrl), GetFileShareServerUri);
         }
 
@@ -153,7 +153,7 @@ internal class UploadToFileSharePathBasedOnWorkspaceId : ISample
             var fileShares =
                 JsonConvert.DeserializeObject<List<ExpandoObject>>(await response.Content.ReadAsStringAsync());
 
-            return fileShares.Select(FileShareInfo.FromJson).ToArray();
+            return fileShares.Select(x=> FileShareInfo.FromJson(x, _pathExtension)).ToArray();
         }
     }
 }

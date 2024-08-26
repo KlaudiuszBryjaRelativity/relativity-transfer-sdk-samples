@@ -84,7 +84,7 @@ internal sealed class ConfigurationScreen : IConfigurationScreen
 					new SourceAndDestinationConfiguration(source, destination));
 
 			case TransferType.UploadDirectoryByWorkspaceId:
-				source = AnsiConsole.Ask("Source directory", configuration.UploadDirectory.Source);
+				source = AnsiConsole.Ask("Source directory", configuration.UploadDirectoryByWorkspaceId.Source);
 				var workspaceId = AnsiConsole.Prompt(
 					new TextPrompt<int>("Workspace ID to list its file shares")
 						.DefaultValue(configuration.UploadDirectoryByWorkspaceId.WorkspaceId)
