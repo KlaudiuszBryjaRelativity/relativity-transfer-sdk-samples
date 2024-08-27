@@ -14,9 +14,11 @@ This project showcases a straightforward integration scenario with `Relativity.T
 - Track the progress of individual items that have been transferred, failed, or skipped
 - Get a detailed transfer report
 - Setup one of three predefined retry policies - No Retry, Linear, Exponential 
-- Assing an exclusion policy to filter out unwanted files
+- Assign an exclusion policy to filter out unwanted files
 
-## A sample list of items source file used in above examples:
+The library supports `.NETStandard 2.0`, which means it is cross-platform. You can run it on Windows, Mac or Linux!
+
+#### A sample list of items source file used in above examples:
 ```
 <source path>;<relative destination path>
 <source path>;<relative destination path>
@@ -24,7 +26,19 @@ This project showcases a straightforward integration scenario with `Relativity.T
 <source path>;<relative destination path>
 ```
 
-The library supports `.NETStandard 2.0`, which means it is cross-platform. You can run it on Windows or Linux!
+## Staging Governance compliance <a name = "staging_governance"></a>
+
+Within each tenant or client domain storage area, the Staging Area consists of the four folders listed below. You are only able to write to and access data within these designated Staging Area folders:
+- ARM
+- StructuredData
+- ProcessingSource
+- TenantVM
+
+More details can be found in the Staging Governance documentation [here](https://help.relativity.com/RelativityOne/Content/Relativity/Staging_Area.htm) and [here](https://einstein.kcura.com/x/_vxgJ).
+
+## Additional information
+
+To ensure optimal security and functionality, it is strongly recommended to avoid using the System Administrator user for transfer operations. Instead, create a dedicated user and assign all necessary permissions to this new user. This approach helps maintain a secure and organized environment, minimizing potential risks associated with using high-privilege users for routine tasks.
 
 ## Samples
 #### Repository structure:
@@ -60,7 +74,7 @@ The repository contains 3 projects:
 | DownloadDirectoryBasedOnExistingJob        | DownloadDirectoryBasedOnExistingJob | [DownloadDirectoryBasedOnExistingJob](https://github.com/relativitydev/relativity-transfer-sdk-samples/blob/main/Source/Relativity.Transfer.SDK.Samples.Repository/JobBasedWorkflow/DownloadDirectoryBasedOnExistingJob.cs)               |
 | UploadDirectory                            | UploadDirectory                     | [UploadDirectory](https://github.com/relativitydev/relativity-transfer-sdk-samples/blob/main/Source/Relativity.Transfer.SDK.Samples.Repository/JobBasedWorkflow/UploadDirectory.cs)                                                       |
 | UploadDirectoryBasedOnExistingJob          | UploadDirectoryBasedOnExistingJob   | [UploadDirectoryBasedOnExistingJob](https://github.com/relativitydev/relativity-transfer-sdk-samples/blob/main/Source/Relativity.Transfer.SDK.Samples.Repository/JobBasedWorkflow/UploadDirectoryBasedOnExistingJob.cs)                   |
-| UploadItems                                | UploadFile                          | [UploadDirectory](https://github.com/relativitydev/relativity-transfer-sdk-samples/blob/main/Source/Relativity.Transfer.SDK.Samples.Repository/JobBasedWorkflow/UploadItems.cs)                                                           |
+| UploadItems                                | UploadFile                          | [UploadItems](https://github.com/relativitydev/relativity-transfer-sdk-samples/blob/main/Source/Relativity.Transfer.SDK.Samples.Repository/JobBasedWorkflow/UploadItems.cs)                                                               |
 
 ## Running the sample
 
@@ -122,7 +136,7 @@ var transferClient = TransferClientBuilder.JobBasedWorkflow
 - Your sample should be visible in the CLI application.
 
 ## Exceptions 
-Some exceptions that can be encountered when using samples and their potential root causes
+Some exceptions that can be encountered when using samples and their potential root causes
 
 #### System.Net.WebException: The remote name could not be resolved:
 - sample console output: 
@@ -144,7 +158,7 @@ Relativity.Transfer.SDK.Interfaces.Exceptions.TransferJobExecutionException: Exc
     - wrong password/credentials/client ID
 
 #### Relativity.Transfer.SDK.Interfaces.Exceptions.BackendServiceException: Forbidden
-- sample console output: 
+- sample console output #1: 
 ```
 Exception occurred during execution of the transfer. Look at the inner exception for more details.
 Relativity.Transfer.SDK.Interfaces.Exceptions.TransferJobExecutionException: Exception occurred during execution of the transfer. Look at the inner exception for more details. ---> Relativity.Transfer.SDK.Interfaces.Exceptions.BackendServiceException: Forbidden
@@ -152,6 +166,13 @@ Relativity.Transfer.SDK.Interfaces.Exceptions.TransferJobExecutionException: Exc
 - Reasons: 
     - Wrong FileshareRelativeDestinationPath setting. Ensure there is no `\` at the beginning of the path.
     - Wrong RelativityOneFileshareRoot. Ensure there is no `files` suffix on the path, and the path is correct.
+
+- sample console output #2:
+```
+Relativity.Transfer.SDK.Interfaces.Exceptions.BackendServiceException: Staging governance violation. Please use proper staging area such as 'ARM', 'StructuredData', 'ProcessingSource' or 'TenantVM'.
+```
+- Reasons:
+    - Go to [Staging Governance compliance](#staging_governance) paragraph for more information.
 
 #### Relativity.Transfer.SDK.Interfaces.Exceptions.BackendServiceException: Unsupported Media Type:
 - sample console output: 
