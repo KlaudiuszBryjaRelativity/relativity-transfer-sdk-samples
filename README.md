@@ -34,7 +34,7 @@ Within each tenant or client domain storage area, the Staging Area consists of t
 - ProcessingSource
 - TenantVM
 
-More details can be found in the Staging Governance documentation [here](https://help.relativity.com/RelativityOne/Content/Relativity/Staging_Area.htm) and [here](https://einstein.kcura.com/x/_vxgJ).
+More details can be found in the Staging Governance documentation [here](https://help.relativity.com/RelativityOne/Content/Relativity/Staging_Area.htm).
 
 ## Additional information
 
