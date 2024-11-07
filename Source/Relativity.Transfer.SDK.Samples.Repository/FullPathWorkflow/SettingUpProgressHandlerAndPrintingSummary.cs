@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using ByteSizeLib;
 using Relativity.Transfer.SDK.Core.ProgressReporting;
+using Relativity.Transfer.SDK.Interfaces.Options;
 using Relativity.Transfer.SDK.Interfaces.Paths;
 using Relativity.Transfer.SDK.Interfaces.ProgressReporting;
 using Relativity.Transfer.SDK.Samples.Core.Attributes;
@@ -48,6 +49,12 @@ internal class SettingUpProgressHandlerAndPrintingSummary : ISample
         var destination = string.IsNullOrWhiteSpace(configuration.UploadDirectory.Destination)
             ? _pathExtension.GetDefaultRemoteDirectoryPathForUpload(configuration.Common)
             : new DirectoryPath(configuration.UploadDirectory.Destination);
+        var uploadDirectoryOptions = new UploadDirectoryOptions()
+        {
+            MaximumSpeed = default,
+            OverwritePolicy = default,
+            // ...
+        };
         var authenticationProvider = _relativityAuthenticationProviderFactory.Create(configuration.Common);
 
         // The builder follows the Fluent convention, and more options will be added in the future. The only required component (besides the client name)
@@ -61,7 +68,7 @@ internal class SettingUpProgressHandlerAndPrintingSummary : ISample
         _consoleLogger.PrintCreatingTransfer(jobId, source, destination, additionalLine);
 
         var result = await transferClient
-            .UploadDirectoryAsync(jobId, source, destination, GetProgressHandler(), default)
+            .UploadDirectoryAsync(jobId, source, destination, uploadDirectoryOptions, GetProgressHandler(), default)
             .ConfigureAwait(false);
 
         PrintTransferSummary(result);

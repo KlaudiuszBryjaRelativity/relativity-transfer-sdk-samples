@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Relativity.Transfer.SDK.Interfaces.Authentication;
+using Relativity.Transfer.SDK.Interfaces.Options;
 using Relativity.Transfer.SDK.Interfaces.Paths;
 using Relativity.Transfer.SDK.Samples.Core.Attributes;
 using Relativity.Transfer.SDK.Samples.Core.Authentication;
@@ -44,7 +45,13 @@ internal class DownloadDirectoryBasedOnExistingJob : ISample
 				? _pathExtension.GetDefaultRemoteDirectoryPathForUpload(configuration.Common)
 				: new DirectoryPath(configuration.DownloadDirectoryBasedOnExistingJob.FirstDestination);
 		var authenticationProvider = _relativityAuthenticationProviderFactory.Create(configuration.Common);
-		var progressHandler = _progressHandlerFactory.Create();
+        var uploadDirectoryOptions = new UploadDirectoryOptions()
+        {
+            MaximumSpeed = default,
+            OverwritePolicy = default,
+            // ...
+        };
+        var progressHandler = _progressHandlerFactory.Create();
 
 		// The builder follows the Fluent convention, and more options will be added in the future. The only required component (besides the client name)
 		// is the authentication provider - a provided one that utilizes an OAuth-based approach has been provided, but the custom implementation can be created.
@@ -58,7 +65,7 @@ internal class DownloadDirectoryBasedOnExistingJob : ISample
 		_consoleLogger.PrintCreatingTransfer(uploadJobId, uploadSource, uploadDestination);
 
 		var uploadResult = await transferFullPathClient
-			.UploadDirectoryAsync(uploadJobId, uploadSource, uploadDestination, progressHandler, token)
+			.UploadDirectoryAsync(uploadJobId, uploadSource, uploadDestination, uploadDirectoryOptions, progressHandler, token)
 			.ConfigureAwait(false);
 
 		_consoleLogger.PrintTransferResult(uploadResult, "Upload transfer has finished:", false);
@@ -80,8 +87,15 @@ internal class DownloadDirectoryBasedOnExistingJob : ISample
 
 		_consoleLogger.PrintCreatingTransfer(downloadJobId, uploadSource, downloadDestination);
 
-		var downloadResult = await transferJobClient
-			.DownloadDirectoryAsync(downloadJobId, downloadDestination, progressHandler, token)
+        var downloadDirectoryOptions = new DownloadDirectoryOptions()
+        {
+            MaximumSpeed = default,
+            OverwritePolicy = default,
+            // ...
+        };
+
+        var downloadResult = await transferJobClient
+			.DownloadDirectoryAsync(downloadJobId, downloadDestination, downloadDirectoryOptions, progressHandler, token)
 			.ConfigureAwait(false);
 
 		_consoleLogger.PrintTransferResult(downloadResult, "Download transfer has finished:");

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Relativity.Transfer.SDK.Interfaces.Options;
 using Relativity.Transfer.SDK.Interfaces.Paths;
 using Relativity.Transfer.SDK.Samples.Core.Attributes;
 using Relativity.Transfer.SDK.Samples.Core.Authentication;
@@ -47,7 +48,13 @@ internal class UploadDirectoryBasedOnExistingJob : ISample
 		var secondSource = new DirectoryPath(configuration.UploadDirectoryBasedOnExistingJob.SecondSource);
 		var authenticationProvider = _relativityAuthenticationProviderFactory.Create(configuration.Common);
 		var jobBuilder = new TransferJobBuilder(authenticationProvider);
-		var progressHandler = _progressHandlerFactory.Create();
+        var uploadDirectoryOptions = new UploadDirectoryOptions()
+        {
+            MaximumSpeed = default,
+            OverwritePolicy = default,
+            // ...
+        };
+        var progressHandler = _progressHandlerFactory.Create();
 
 		await RegisterUploadDirectoryJobAsync(jobBuilder, firstJobId, destination).ConfigureAwait(false);
 
@@ -63,7 +70,7 @@ internal class UploadDirectoryBasedOnExistingJob : ISample
 		_consoleLogger.PrintCreatingTransfer(firstJobId, firstSource, destination);
 
 		var firstResult = await transferClient
-			.UploadDirectoryAsync(firstJobId, firstSource, progressHandler, token)
+			.UploadDirectoryAsync(firstJobId, firstSource, uploadDirectoryOptions, progressHandler, token)
 			.ConfigureAwait(false);
 
 		_consoleLogger.PrintTransferResult(firstResult, "First transfer has finished:", false);

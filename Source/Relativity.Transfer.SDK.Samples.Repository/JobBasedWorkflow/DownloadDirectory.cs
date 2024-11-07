@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Relativity.Transfer.SDK.Interfaces.Authentication;
+using Relativity.Transfer.SDK.Interfaces.Options;
 using Relativity.Transfer.SDK.Interfaces.Paths;
 using Relativity.Transfer.SDK.Samples.Core.Attributes;
 using Relativity.Transfer.SDK.Samples.Core.Authentication;
@@ -43,7 +44,13 @@ internal sealed class DownloadDirectory : ISample
 			: new DirectoryPath(configuration.DownloadDirectory.Source);
 		var destination = _pathExtension.EnsureLocalDirectory(configuration.DownloadDirectory.Destination);
 		var authenticationProvider = _relativityAuthenticationProviderFactory.Create(configuration.Common);
-		var progressHandler = _progressHandlerFactory.Create();
+        var downloadDirectoryOptions = new DownloadDirectoryOptions()
+        {
+            MaximumSpeed = default,
+            OverwritePolicy = default,
+            // ...
+        };
+        var progressHandler = _progressHandlerFactory.Create();
 
 		await RegisterDownloadJobAsync(authenticationProvider, jobId, source).ConfigureAwait(false);
 
@@ -59,7 +66,7 @@ internal sealed class DownloadDirectory : ISample
 		_consoleLogger.PrintCreatingTransfer(jobId, source, destination);
 
 		var result = await transferClient
-			.DownloadDirectoryAsync(jobId, destination, progressHandler, token)
+			.DownloadDirectoryAsync(jobId, destination, downloadDirectoryOptions, progressHandler, token)
 			.ConfigureAwait(false);
 
 		_consoleLogger.PrintTransferResult(result);
