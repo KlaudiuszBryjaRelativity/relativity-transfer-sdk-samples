@@ -64,7 +64,7 @@ internal class UploadFile : ISample
         var result = await transferClient
             .UploadFileAsync(jobId, source, destination, uploadFileOptions, progressHandler, token)
             // If you do not need pass transfer options you can invoke this method like this:
-            //.UploadDirectoryAsync(jobId, source, destination, progressHandler, token)
+            //.UploadFileAsync(jobId, source, destination, progressHandler, token)
             .ConfigureAwait(false);
 
         _consoleLogger.PrintTransferResult(result);

@@ -45,6 +45,7 @@ internal class DownloadDirectoryBasedOnExistingJob : ISample
 				? _pathExtension.GetDefaultRemoteDirectoryPathForUpload(configuration.Common)
 				: new DirectoryPath(configuration.DownloadDirectoryBasedOnExistingJob.FirstDestination);
 		var authenticationProvider = _relativityAuthenticationProviderFactory.Create(configuration.Common);
+        // This is transfer options object which is not necessary if you do not need change default parameters.
         var uploadDirectoryOptions = new UploadDirectoryOptions()
         {
             MaximumSpeed = default,
@@ -66,7 +67,9 @@ internal class DownloadDirectoryBasedOnExistingJob : ISample
 
 		var uploadResult = await transferFullPathClient
 			.UploadDirectoryAsync(uploadJobId, uploadSource, uploadDestination, uploadDirectoryOptions, progressHandler, token)
-			.ConfigureAwait(false);
+            // If you do not need pass transfer options you can invoke this method like this:
+            //.UploadDirectoryAsync(uploadJobId, uploadSource, uploadDestination, progressHandler, token)
+            .ConfigureAwait(false);
 
 		_consoleLogger.PrintTransferResult(uploadResult, "Upload transfer has finished:", false);
 
