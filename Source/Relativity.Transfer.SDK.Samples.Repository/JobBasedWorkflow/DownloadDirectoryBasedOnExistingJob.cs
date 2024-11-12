@@ -86,7 +86,7 @@ internal class DownloadDirectoryBasedOnExistingJob : ISample
 			.Build();
 
 		_consoleLogger.PrintCreatingTransfer(downloadJobId, uploadSource, downloadDestination);
-
+        // This is transfer options object which is not necessary if you do not need change default parameters.
         var downloadDirectoryOptions = new DownloadDirectoryOptions()
         {
             MaximumSpeed = default,
@@ -96,7 +96,9 @@ internal class DownloadDirectoryBasedOnExistingJob : ISample
 
         var downloadResult = await transferJobClient
 			.DownloadDirectoryAsync(downloadJobId, downloadDestination, downloadDirectoryOptions, progressHandler, token)
-			.ConfigureAwait(false);
+            // If you do not need pass transfer options you can invoke this method like this:
+            //.DownloadDirectoryAsync(downloadJobId, downloadDestination, progressHandler, token)
+            .ConfigureAwait(false);
 
 		_consoleLogger.PrintTransferResult(downloadResult, "Download transfer has finished:");
 	}

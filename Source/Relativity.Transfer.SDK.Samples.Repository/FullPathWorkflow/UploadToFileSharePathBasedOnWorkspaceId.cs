@@ -54,6 +54,7 @@ internal class UploadToFileSharePathBasedOnWorkspaceId : ISample
         var jobId = configuration.Common.JobId;
         var source = new DirectoryPath(configuration.UploadDirectoryByWorkspaceId.Source);
         var authenticationProvider = _relativityAuthenticationProviderFactory.Create(configuration.Common);
+        // This is transfer options object which is not necessary if you do not need change default parameters.
         var uploadDirectoryOptions = new UploadDirectoryOptions()
         {
             MaximumSpeed = default,
@@ -84,6 +85,8 @@ internal class UploadToFileSharePathBasedOnWorkspaceId : ISample
 
         var result = await transferClient
             .UploadDirectoryAsync(jobId, source, destination, uploadDirectoryOptions, progressHandler, token)
+            // If you do not need pass transfer options you can invoke this method like this:
+            //.UploadDirectoryAsync(jobId, source, destination, progressHandler, token)
             .ConfigureAwait(false);
 
         _consoleLogger.PrintTransferResult(result);

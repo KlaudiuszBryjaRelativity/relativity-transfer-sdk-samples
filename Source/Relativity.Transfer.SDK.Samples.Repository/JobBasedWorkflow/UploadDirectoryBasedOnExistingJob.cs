@@ -48,6 +48,7 @@ internal class UploadDirectoryBasedOnExistingJob : ISample
 		var secondSource = new DirectoryPath(configuration.UploadDirectoryBasedOnExistingJob.SecondSource);
 		var authenticationProvider = _relativityAuthenticationProviderFactory.Create(configuration.Common);
 		var jobBuilder = new TransferJobBuilder(authenticationProvider);
+        // This is transfer options object which is not necessary if you do not need change default parameters.
         var uploadDirectoryOptions = new UploadDirectoryOptions()
         {
             MaximumSpeed = default,
@@ -71,7 +72,9 @@ internal class UploadDirectoryBasedOnExistingJob : ISample
 
 		var firstResult = await transferClient
 			.UploadDirectoryAsync(firstJobId, firstSource, uploadDirectoryOptions, progressHandler, token)
-			.ConfigureAwait(false);
+            // If you do not need pass transfer options you can invoke this method like this:
+            //.UploadDirectoryAsync(firstJobId, firstSource, progressHandler, token)
+            .ConfigureAwait(false);
 
 		_consoleLogger.PrintTransferResult(firstResult, "First transfer has finished:", false);
 

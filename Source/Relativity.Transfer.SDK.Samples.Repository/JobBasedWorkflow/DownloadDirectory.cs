@@ -44,6 +44,7 @@ internal sealed class DownloadDirectory : ISample
 			: new DirectoryPath(configuration.DownloadDirectory.Source);
 		var destination = _pathExtension.EnsureLocalDirectory(configuration.DownloadDirectory.Destination);
 		var authenticationProvider = _relativityAuthenticationProviderFactory.Create(configuration.Common);
+        // This is transfer options object which is not necessary if you do not need change default parameters.
         var downloadDirectoryOptions = new DownloadDirectoryOptions()
         {
             MaximumSpeed = default,
@@ -67,7 +68,9 @@ internal sealed class DownloadDirectory : ISample
 
 		var result = await transferClient
 			.DownloadDirectoryAsync(jobId, destination, downloadDirectoryOptions, progressHandler, token)
-			.ConfigureAwait(false);
+            // If you do not need pass transfer options you can invoke this method like this:
+            //.DownloadDirectoryAsync(jobId, destination, progressHandler, token)
+            .ConfigureAwait(false);
 
 		_consoleLogger.PrintTransferResult(result);
 	}

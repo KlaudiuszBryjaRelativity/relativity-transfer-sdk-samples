@@ -42,6 +42,7 @@ internal class UploadFile : ISample
             ? _pathExtension.GetDefaultRemoteDirectoryPathForUpload(configuration.Common)
             : new DirectoryPath(configuration.UploadFile.Destination);
         var authenticationProvider = _relativityAuthenticationProviderFactory.Create(configuration.Common);
+        // This is transfer options object which is not necessary if you do not need change default parameters.
         var uploadFileOptions = new UploadFileOptions()
         {
             MaximumSpeed = default,
@@ -62,6 +63,8 @@ internal class UploadFile : ISample
 
         var result = await transferClient
             .UploadFileAsync(jobId, source, destination, uploadFileOptions, progressHandler, token)
+            // If you do not need pass transfer options you can invoke this method like this:
+            //.UploadDirectoryAsync(jobId, source, destination, progressHandler, token)
             .ConfigureAwait(false);
 
         _consoleLogger.PrintTransferResult(result);

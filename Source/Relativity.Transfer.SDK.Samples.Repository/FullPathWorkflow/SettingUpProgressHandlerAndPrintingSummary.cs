@@ -49,6 +49,7 @@ internal class SettingUpProgressHandlerAndPrintingSummary : ISample
         var destination = string.IsNullOrWhiteSpace(configuration.UploadDirectory.Destination)
             ? _pathExtension.GetDefaultRemoteDirectoryPathForUpload(configuration.Common)
             : new DirectoryPath(configuration.UploadDirectory.Destination);
+        // This is transfer options object which is not necessary if you do not need change default parameters.
         var uploadDirectoryOptions = new UploadDirectoryOptions()
         {
             MaximumSpeed = default,
@@ -69,6 +70,8 @@ internal class SettingUpProgressHandlerAndPrintingSummary : ISample
 
         var result = await transferClient
             .UploadDirectoryAsync(jobId, source, destination, uploadDirectoryOptions, GetProgressHandler(), default)
+            // If you do not need pass transfer options you can invoke this method like this:
+            //.UploadDirectoryAsync(jobId, source, destination, GetProgressHandler(), default)
             .ConfigureAwait(false);
 
         PrintTransferSummary(result);

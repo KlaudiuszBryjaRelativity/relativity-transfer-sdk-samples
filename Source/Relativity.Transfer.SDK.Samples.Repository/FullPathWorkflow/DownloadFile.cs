@@ -40,6 +40,7 @@ internal class DownloadFile : ISample
         var source = new FilePath(configuration.DownloadFile.Source);
         var destination = _pathExtension.EnsureLocalDirectory(configuration.DownloadFile.Destination);
         var authenticationProvider = _relativityAuthenticationProviderFactory.Create(configuration.Common);
+        // This is transfer options object which is not necessary if you do not need change default parameters.
         var downloadFileOptions = new DownloadFileOptions()
         {
             MaximumSpeed = default,
@@ -60,6 +61,8 @@ internal class DownloadFile : ISample
 
         var result = await transferClient
             .DownloadFileAsync(jobId, source, destination, downloadFileOptions, progressHandler, token)
+            // If you do not need pass transfer options you can invoke this method like this:
+            //.DownloadFileAsync(jobId, source, destination, progressHandler, token)
             .ConfigureAwait(false);
 
         _consoleLogger.PrintTransferResult(result);
